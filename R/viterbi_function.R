@@ -1,8 +1,21 @@
 #' Viterbi Decoding Function
 #'
 #' @description
-#' Left here as a note to fix later.
+#' The Viterbi Algorithm applied to Rain Models.
 #'
+#' @param b Matrix of Emission Probabilities
+#'
+#' @param a Matrix of Transition Probabilities
+#'
+#' @param initDist The Vector of Initial Probabilities for each state.
+#'
+#' @param numDays Number of Days in the Data
+#'
+#' @param numDays Number of Years recorded
+#'
+#' @param numDays Number of States decided
+#'
+#' @returns A vector that represents the best state sequence.
 #'
 #' @export
 

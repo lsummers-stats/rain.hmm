@@ -6,6 +6,18 @@
 \usage{
 viterbi.decoding(b, a, initDist, numDays, numYears, numStates)
 }
+\arguments{
+\item{b}{Matrix of Emission Probabilities}
+
+\item{a}{Matrix of Transition Probabilities}
+
+\item{initDist}{The Vector of Initial Probabilities for each state.}
+
+\item{numDays}{Number of States decided}
+}
+\value{
+A vector that represents the best state sequence.
+}
 \description{
-Left here as a note to fix later.
+The Viterbi Algorithm applied to Rain Models.
 }
