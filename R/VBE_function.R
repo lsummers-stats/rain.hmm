@@ -5,7 +5,7 @@
 #'
 #' @details
 #' Used as part of the Variational Bayes EM Process for a Hidden Markov Model designed
-#' for rain data.
+#'  for rain data.
 #'
 #' @param numDays Number of Days per Year
 #'
@@ -20,17 +20,17 @@
 #' @param xi The Current Matrix for the Initial States.
 #'
 #' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#' the initial probabilities each state.
+#'  the initial probabilities each state.
 #'
 #' @param alpha The Current Matrix for the Transitions.
 #'
 #' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#' the transition probabilities from state to state.
+#'  the transition probabilities from state to state.
 #'
 #' @param zeta The Current Matrix for the Mixtures
 #'
 #' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#' the mixture probabilities at each location.
+#'  the mixture probabilities at each location.
 #'
 #' @param gamma.post The Current matrix for the Shape Parameters
 #'
@@ -42,7 +42,7 @@
 #'
 #' @param var A list of matrices and vectors objects:
 #'    * `del_y0`: Rain indicator function. Typically an `ifelse` function.
-#'    * `a_jk`: Posterior state kernel, a matrix filled with 0's with dimensions: `numStates` by `numStates`
+#'    * `a_jk`: Posterior state kernel, a matrix filled with 0's with dimensions: `numStates` by `numStates`.
 #'    * `b_tj`: Posterior emission kernel, an array filled with 1's with dimensions: `numDays` by `numStates` by `numYears`.
 #'    * `b_tjl`: An augmented `b_tj` array, filled with 0's with dimensions: `numDays` by `numStates` by `numYears` by `numLoc`.
 #'    * `a_1j`: Posterior initial probability kernel, a matrix with dimensions: `numYears` by `numStates`.
@@ -62,6 +62,7 @@
 #'  @return A list of objects built from empty objects in `var`:
 #'  * `a_jk`: The posterior state kernel.
 #'  * `b_tj`: Posterior emission kernel.
+#'  * `c_t` : A series of constants used to normalize the forward variables.
 #'  * `q_1j`: Posterior initial probability.
 #'  * `q_tj`: Posterior probability of stationary distribution.
 #'  * `q_tjml`: An augmented `q_tjml` array.
@@ -140,5 +141,5 @@ VBE.exp <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zet
         q_tjml[,j,-1,n,l] <- b_star[,j,-1]/sum_b
         q_tjml[,j,1,n,l] <- b_star[,j,1]
       }
-  output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
+  output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'ct' = ct,'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
 }
