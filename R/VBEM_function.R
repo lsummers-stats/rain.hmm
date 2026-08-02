@@ -110,7 +110,7 @@ VBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs) {
     improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
     improvement_dic <- (dic_old-dic[iter])/dic_old}
   for(l in 1:L){
-    params <- post_param(numStates = K,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
+    params <- post_param(numStates = S,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
     zeta.post[,,l]   <-zeta.post[,,l] + params$MixProb
     lambda.post[,,l] <-lambda.post[,,l] + params$RainRate}
   pi.post     <- params$InitDist
