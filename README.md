@@ -1,15 +1,14 @@
----
-title: "HMMVI: Hidden Markov Models with Variational Bayes"
-output: github_document
----
+HMMVI: Hidden Markov Models with Variational Bayes
+================
 
-This package is designed...
+This package is designed…
 
 # Variational Bayes Basic Function
 
-The basic function uses Variational Bayes assuming exponential mixture components:
+The basic function uses Variational Bayes assuming exponential mixture
+components:
 
-```{r example}
+``` r
 library(HMMVI)
 #Pulling the Fake Data Set Faux 1
 set.seed(1)
@@ -37,32 +36,42 @@ h_j0        <- gamma_0*log(delta_0) - lgamma(gamma_0) # constant terms in prior 
 Model <- VBEM(D = 1800, S = S, Y = 1, L = 3, M = 3, xi = xi_0, alpha = alpha_0, zeta = zeta_0, gamma_shape = gamma_0, gamma_rate = delta_0, y)
 ```
 
-The output is a list, containing information such as the posterior hyperparameters, or the ELBO/DIC.
+The output is a list, containing information such as the posterior
+hyperparameters, or the ELBO/DIC.
 
-```{r posterior pi}
+``` r
 print(Model$posteriors$pi)
 ```
-```{r posterior transition}
+
+    ## [1] 0.0006409779 0.0032459527 0.9961130694
+
+``` r
 print(Model$posteriors$transmat)
 ```
+
+    ##           [,1]      [,2]      [,3]
+    ## [1,] 0.6383142 0.2254607 0.1362250
+    ## [2,] 0.1998351 0.3932420 0.4069229
+    ## [3,] 0.2188876 0.3725002 0.4086122
+
 ## Post-Formulation Functions
 
-This package includes additional functions like the viterbi-encoding algorithm, so it does not have to be programmed on the side:
+This package includes additional functions like the viterbi-encoding
+algorithm, so it does not have to be programmed on the side:
 
-```{r viterbi}
-
+``` r
 #Viterbi Here
-
 ```
 
-
 # Stochastic Version
-As data gets more complex, with more locations and possibly adding in more mixtures and states, it becomes necessary to create a less intensive method. This is the purpose of the stochastic version of the function.
 
-```{r stochastic}
+As data gets more complex, with more locations and possibly adding in
+more mixtures and states, it becomes necessary to create a less
+intensive method. This is the purpose of the stochastic version of the
+function.
 
+``` r
 #Stochastic Here
-
 ```
 
 # Gamma Mixtures
