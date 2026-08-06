@@ -59,6 +59,7 @@
 #' @param iter The current iteration step.
 #'
 #' @return A list of objects built from empty objects in `var`:
+#'
 #'  * `gamma_jml`: Posterior shape of exponential rate.
 #'  * `delta_jml`: Posterior rate of exponential rate.
 #'  * `xi_j`: Posterior Dirichlet paramters for initial distribution.

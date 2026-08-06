@@ -15,5 +15,6 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports: devtools,
-        roxygen2
+        roxygen2,
+        Rmpfr
 Config/roxygen2/version: 8.0.0

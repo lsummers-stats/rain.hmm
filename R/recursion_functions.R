@@ -7,7 +7,7 @@
 #'  @details
 #'
 #'  This function is left to show the programming done for the Forward step in the Forward-Backward Algorithm
-#'  made for a Hidden Markov Model.
+#'   made for a Hidden Markov Model.
 #'
 #'  @param numObs Number of Observations
 #'
@@ -20,17 +20,18 @@
 #'  @param initDist Initial Distribution
 #'
 #'  The initial probability kernel. If no value is given, it will automatically give
-#'  the first state a probability of 1, and all states a probability of 0.
+#'   the first state a probability of 1, and all states a probability of 0.
 #'
 #'  @param a State Transition Matrix
 #'
-#'  The current state transition matrix. Input can be either a matrix or an array.
+#'   The current state transition matrix. Input can be either a matrix or an array.
 #'
 #'  @param b State Emission Matrix
 #'
-#'  The current state emission matrix. Input can be either a matrix or an array.
+#'   The current state emission matrix. Input can be either a matrix or an array.
 #'
 #'  @returns A list holding two objects:
+#'
 #'  * `fvar_tilde` : A matrix containing all your Forward Variables. Each row corresponds to each observation
 #'  and each column corresponds to each state.
 #'  * `ct` : A vector containing the constant used to normalize `F_tilde` at each point in time `t`.
@@ -72,11 +73,11 @@ forward_recursion <- function(numObs, numStates, initDist = c(1,rep(0,K-1)), a =
 #' Backward Recursion Algorithm
 #'
 #'  @description
-#' A function used to calculate backward variables.
+#'  A function used to calculate backward variables.
 #'
 #'  @details
-#' This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm
-#' made for a Hidden Markov Model.
+#'  This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm
+#'   made for a Hidden Markov Model.
 #'
 #'  @param numObs Number of Observations
 #'
@@ -122,6 +123,124 @@ backward_recursion <- function(numObs, numStates, a = NULL, b = NULL, ct = NULL)
       bvar_star[t,j] <- sum(a[j,]*bvar_tilde[t+1,]*b[t+1,])
     }
     bvar_tilde[t,] <- bvar_star[t,]*ct[t]
+  }
+  return(bvar_tilde)
+}
+
+#' High Precision Forward Recursion Algorithm
+#'
+#'  @description
+#'
+#'  A function used to calculate forward variables with high precision.
+#'
+#'  @details
+#'
+#'  This function is left to show the programming done for the Forward step in the Forward-Backward Algorithm
+#'  made for a Hidden Markov Model. One can edit the amount of precision using the Rmpfr package.
+#'
+#'  @param numObs Number of Observations
+#'
+#'  The total number of observations in your data set.
+#'
+#'  @param numStates Number of States
+#'
+#'  The total number of states planned for the Hidden Markov Model
+#'
+#'  @param initDist Initial Distribution
+#'
+#'  The initial probability kernel. If no value is given, it will automatically give
+#'  the first state a probability of 1, and all states a probability of 0.
+#'
+#'  @param a State Transition Matrix
+#'
+#'  The current state transition matrix. Input can be either a matrix or an array.
+#'
+#'  @param b State Emission Matrix
+#'
+#'  The current state emission matrix. Input can be either a matrix or an array.
+#'
+#'  @param Precision The amount of bits tracked by R
+#'
+#'  For more details, see the Rmpfr package.
+#'
+#'  @returns A list holding two objects:
+#'  * `fvar_tilde` : A matrix containing all your Forward Variables. Each row corresponds to each observation
+#'  and each column corresponds to each state.
+#'  * `ct` : A vector containing the constant used to normalize `F_tilde` at each point in time `t`.
+#'
+#'  @export
+
+
+forward_recursion_mpfr <- function(numObs, numStates, initDist = c(1,rep(0,K-1)), a = NULL, b = NULL, precision = 120){
+  ct <- mpfrArray(1,precBits = precision, dim = numObs)
+  fvar <- mpfrArray(0, precBits = precision, dim = c(numObs,numStates))
+  fvar_star <- mpfrArray(0, precBits = precision, dim = c(numObs,numStates))
+  fvar_tilde <- array(0, dim = c(numObs,numStates))
+  b <- exp(mpfr(b,precision))
+  fvar[1,] <- initDist*b[1,]
+  ct[1] <- 1/sum(fvar[1,])
+  fvar_tilde[1,] <- as.double(fvar[1,]*ct[1])
+
+  for(t in 2:numObs){
+    for(j in 1:numStates){
+      fvar_star[t,j] <- sum(fvar_tilde[t-1,]*a[,j])*b[t,j]
+    }
+    ct[t] <- 1/sum(fvar_star[t,])
+    fvar_tilde[t,] <- as.double(fvar_star[t,]*ct[t])
+  }
+  logct <- as.double(log(ct))
+  Forward <- list(fvar_tilde, logct)
+  return(Forward)
+}
+
+#' High Precision Backward Recursion Algorithm
+#'
+#'  @description
+#' A function used to calculate backward variables variables with high precision.
+#'
+#'  @details
+#' This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm
+#' made for a Hidden Markov Model. One can edit the amount of precision using the Rmpfr package.
+#'
+#'  @param numObs Number of Observations
+#'
+#'  The total number of observations in your data set.
+#'
+#'  @param numStates Number of States
+#'
+#'  The total number of states planned for the Hidden Markov Model
+#'
+#'  @param a State Transition Matrix
+#'
+#'  The current state transition matrix. Input can be either a matrix or an array.
+#'
+#'  @param b State Emission Matrix
+#'
+#'  The current state emission matrix. Input can be either a matrix or an array.
+#'
+#'  @param ct Normalizing Constant
+#'
+#'  A vector containing constants normalizing `F_tilde`, the Forward Variables. This vector is typically
+#'  found from running the Forward part of the Forward Algorithm.
+#'
+#'  @returns A matrix of all your backward variables:
+#'  * The rows correspond to the observations
+#'  * The columns correspond to the states.
+#'
+#'  @export
+
+backward_recursion_mpfr <- function(numObs, numStates, a = NULL, b = NULL, ct = NULL, precision = 120){
+  bvar_star <- mpfrArray(1, precBits=precision, dim = c(numObs,numStates))
+  bvar_tilde <- array(1, dim = c(numObs,numStates))
+  ct <- exp(mpfr(ct,precision))
+  b <- exp(mpfr(b,precision))
+  bvar_star[numObs,] <- 1
+  bvar_tilde[numObs,] <- 1/numStates
+  for(t in (numObs-1):1){
+    for(j in 1:numStates){
+      bvar_star[t,j] <- sum(a[j,]*bvar_tilde[t+1,]*b[t+1,])
+    }
+    bvar_tilde[t,] <- as.double(bvar_star[t,]/sum(bvar_star[t,]))
   }
   return(bvar_tilde)
 }

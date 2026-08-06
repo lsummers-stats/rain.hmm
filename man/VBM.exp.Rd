@@ -75,6 +75,7 @@ The vector containing the y-values (typically the precipitation amounts) from th
 }
 \value{
 A list of objects built from empty objects in `var`:
+
  * `gamma_jml`: Posterior shape of exponential rate.
  * `delta_jml`: Posterior rate of exponential rate.
  * `xi_j`: Posterior Dirichlet paramters for initial distribution.
