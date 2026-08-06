@@ -53,9 +53,7 @@ The initial matrix of the shape hyperparameters for each Gamma mixture component
 
 The initial matrix of the rate hyperparameters for each Gamma mixture component.}
 
-\item{obs}{The data set.
-
-The dataset is assumed to be just a vector of points.}
+\item{obs}{The dataset.}
 
 \item{mix.samples}{The indicator used to decide the data should come from different years.
 
