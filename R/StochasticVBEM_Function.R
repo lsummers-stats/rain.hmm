@@ -57,9 +57,8 @@
 
 StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F) {
   mix       <- mix.samples
-  N         <- dim(obs)[1]
   y2        <- array(y,dim = c(D,Y,L))
-  maxiter   <- 5  # number of iterations to run the code for
+  maxiter   <- 100  # number of iterations to run the code for
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
   dic[1]    <- 25000
@@ -108,16 +107,18 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
     zeta <- VBMout$zeta_jl
     gamma_shape <- VBMout$gamma_jml
     gamma_rate <- VBMout$delta_jml
+    numericmix <- array(as.numeric(VBEout$q_tjml),dim(VBEout$q_tjml))
+    numerictrans <- array(as.numeric(VBEout$q_jk),dim(VBEout$q_jk))
     #ELBO
-    elboresult <- ELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, y_sample$data, h = VBMout$h_jml)
+    elboresult <- StoELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, obs = y_sample$data, h = VBMout$h_jml)
     elbo[iter] <- elboresult
     elbo_old <- elbo[iter-1]
     #DIC
-    DICout <- DIC(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml)
+    DICout <- StoDIC(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml)
     dic[iter] <- DICout$dic
     dic_old <- dic[iter-1]
     improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
-    improvement_dic <- (dic_old-dic[iter])/dic_old}
+    improvement_dic <- (dic_old-dic[iter])/dic_old }
   for(l in 1:L){
     params <- post_param(numStates = K,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
     zeta.post[,,l]   <-zeta.post[,,l] + params$MixProb
@@ -125,7 +126,6 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)
-  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic)
-}
+  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic)}
 
 
