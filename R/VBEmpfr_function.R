@@ -138,6 +138,8 @@ VBEmpfr.exp = function(numDays, numStates, numLoc, numMix, xi, alpha, zeta, gamm
       }
       q_tjml[,j,-1,l] <- exp(log(b_star[,j,-1]) - log(sum_b))
       q_tjml[,j,1,l] <- b_star[,j,1]}
+    fix = which(logct < 0)
+    logct[fix] = exp(-700)
   }
-  output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
+  output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'ct' = logct, 'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
 }
