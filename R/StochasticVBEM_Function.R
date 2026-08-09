@@ -58,7 +58,7 @@
 StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F) {
   mix       <- mix.samples
   y2        <- array(y,dim = c(D,Y,L))
-  maxiter   <- 100  # number of iterations to run the code for
+  maxiter   <- 5  # number of iterations to run the code for
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
   dic[1]    <- 25000
@@ -83,7 +83,7 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
   logct       <- c(rep(0, times = D))
   fvar        <- array(0, dim = c(D,S))
   bvar        <- array(0, dim = c(D,S))
-  b_star      <- mpfrArray(0, precBits=120, dim = c(D,S,M))
+  b_star      <- array(0, dim = c(D,S,M))
   ct          <- c(rep(0, times = D))
 
   q_tj        <- array(0, dim = c(D,S)) # posterior probability of stationary distribution
