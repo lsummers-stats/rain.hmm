@@ -46,16 +46,22 @@
 #'
 #' The initial value is set to FALSE.
 #'
+#' @param maxiter The maximum number of iterations the algorithm will do before stopping.
+#'
+#' The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
+#'  of 10^-9. The default value is 1000.
+#'
 #' @return A list of objects used to describe the model:
 #'
 #'  * `priors`: A list containing all the starting matrices and probabilities.
 #'  * `posteriors`: A list containing all the posterior matrices and probabilities.
-#'  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`)
-#'  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
+#'  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`).
+#'  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`).
+#'  * `total_iters`: An integer counting the total number of interations done by the algorithm.
 #'
 #' @export
 
-StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F) {
+StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F, maxiter = 1000) {
   mix       <- mix.samples
   y2        <- array(y,dim = c(D,Y,L))
   maxiter   <- 5  # number of iterations to run the code for
@@ -126,6 +132,6 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)
-  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic)}
+  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic, 'total_iters' = iter)}
 
 

@@ -11,9 +11,9 @@
 #'
 #' @param numDays Number of Days in the Data
 #'
-#' @param numDays Number of Years recorded
+#' @param numYears Number of Years recorded
 #'
-#' @param numDays Number of States decided
+#' @param numStates Number of States decided
 #'
 #' @returns A vector that represents the best state sequence.
 #'

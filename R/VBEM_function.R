@@ -43,6 +43,11 @@
 #'
 #' The vector containing the y-values (typically the precipitation amounts) from the data.
 #'
+#' @param maxiter The maximum number of iterations the algorithm will do before stopping.
+#'
+#' The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
+#'  of 10^-9. The default value is 1000.
+#'
 #' @return A list of objects used to describe the model:
 #'  * `priors`: A list containing all the starting matrices and probabilities.
 #'  * `posteriors`: A list containing all the posterior matrices and probabilities.
@@ -52,8 +57,7 @@
 #'  @export
 
 
-VBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs) {
-  maxiter   <- 1000  # number of iterations to run the code for
+VBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, maxiter = 1000) {
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
   dic[1]    <- 25000
