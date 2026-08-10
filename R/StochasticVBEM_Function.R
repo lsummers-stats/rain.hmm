@@ -57,14 +57,13 @@
 #'  * `posteriors`: A list containing all the posterior matrices and probabilities.
 #'  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`).
 #'  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`).
-#'  * `total_iters`: An integer counting the total number of interations done by the algorithm.
+#'  * `iternum`: An integer counting the total number of interations done by the algorithm.
 #'
 #' @export
 
-StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F, maxiter = 1000) {
+StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F, maxiter = 10) {
   mix       <- mix.samples
   data      <- array(obs,dim = c(D,Y,L))
-  maxiter   <- 5  # number of iterations to run the code for
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
   dic[1]    <- 25000
@@ -126,12 +125,12 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
     improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
     improvement_dic <- (dic_old-dic[iter])/dic_old }
   for(l in 1:L){
-    params <- post_param(numStates = K,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
+    params <- post_param(numStates = S,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
     zeta.post[,,l]   <-zeta.post[,,l] + params$MixProb
     lambda.post[,,l] <-lambda.post[,,l] + params$RainRate}
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)
-  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic, 'total_iters' = iter)}
+  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic, 'iternum' = iter)}
 
 

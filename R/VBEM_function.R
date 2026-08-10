@@ -53,6 +53,7 @@
 #'  * `posteriors`: A list containing all the posterior matrices and probabilities.
 #'  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`)
 #'  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
+#'  * `iternum`: An integer denoting how many iterations took place.
 #'
 #'  @export
 
@@ -120,5 +121,5 @@ VBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, ma
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)
-  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic)
+  output = list('priors' = priors, 'posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic, 'iternum' = iter)
 }

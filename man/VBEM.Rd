@@ -68,6 +68,7 @@ A list of objects used to describe the model:
  * `posteriors`: A list containing all the posterior matrices and probabilities.
  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`)
  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
+ * `iternum`: An integer denoting how many iterations took place.
 
  @export
 }

@@ -43,7 +43,7 @@ The output is a list, containing information such as the posterior hyperparamete
 print(Model$posteriors$pi)
 ```
 ```{r posterior transition}
-print(Model$maxiter)
+Model$posteriors$transmat
 ```
 ## Post-Formulation Functions
 
@@ -73,7 +73,12 @@ alpha_0     <- matrix(rep(10,9),nrow = 3,byrow = T)/3 # Dirichlet prior for tran
 xi_0        <- c(.4,.3,.3) # Dirichlet prior for initial probabilities
 
 StoModel <- StoVBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, xi = xi_0, alpha = alpha_0, zeta = zeta_0, gamma_shape = gamma_0, gamma_rate = delta_0, obs = Faux2, mix.samples = F)
-
 ```
+
+```{r result}
+print(StoModel$posteriors$pi)
+print(StoModel$iternum)
+```
+
 
 # Gamma Mixtures

@@ -35,7 +35,7 @@ Data_Randomizer <- function(numLoc, obs, mix.sample = F){
   } else {
     years = rep(sample(1:total.batches,1), minibatch.size)}
   for(day in 1:minibatch.size){
-    y_sample[day,] = y2[day,years[day],]}
+    y_sample[day,] = obs[day,years[day],]}
   del_y0_sample = ifelse(y_sample==0,1,0)
   output = list('data' = y_sample, 'del_y0' = del_y0_sample)
 }

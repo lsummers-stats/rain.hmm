@@ -17,7 +17,7 @@ StoVBEM(
   gamma_rate,
   obs,
   mix.samples = F,
-  maxiter = 1000
+  maxiter = 10
 )
 }
 \arguments{
@@ -72,7 +72,7 @@ A list of objects used to describe the model:
  * `posteriors`: A list containing all the posterior matrices and probabilities.
  * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`).
  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`).
- * `total_iters`: An integer counting the total number of interations done by the algorithm.
+ * `iternum`: An integer counting the total number of interations done by the algorithm.
 }
 \description{
 A function dedicated to the Variational Bayes EM process, simplified using Stochastic VI.
