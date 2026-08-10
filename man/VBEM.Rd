@@ -4,7 +4,20 @@
 \alias{VBEM}
 \title{Variational Bayes EM Function}
 \usage{
-VBEM(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs)
+VBEM(
+  D,
+  S,
+  Y,
+  L,
+  M,
+  xi,
+  alpha,
+  zeta,
+  gamma_shape,
+  gamma_rate,
+  obs,
+  maxiter = 1000
+)
 }
 \arguments{
 \item{D}{Number of Days per Year}
@@ -43,6 +56,11 @@ The state matrix of the rate hyperparameters for each Gamma mixture component.}
 \item{obs}{The vector of observations.
 
 The vector containing the y-values (typically the precipitation amounts) from the data.}
+
+\item{maxiter}{The maximum number of iterations the algorithm will do before stopping.
+
+The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
+ of 10^-9. The default value is 1000.}
 }
 \value{
 A list of objects used to describe the model:

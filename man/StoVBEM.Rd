@@ -16,7 +16,8 @@ StoVBEM(
   gamma_shape,
   gamma_rate,
   obs,
-  mix.samples = F
+  mix.samples = F,
+  maxiter = 1000
 )
 }
 \arguments{
@@ -58,14 +59,20 @@ The initial matrix of the rate hyperparameters for each Gamma mixture component.
 \item{mix.samples}{The indicator used to decide the data should come from different years.
 
 The initial value is set to FALSE.}
+
+\item{maxiter}{The maximum number of iterations the algorithm will do before stopping.
+
+The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
+ of 10^-9. The default value is 1000.}
 }
 \value{
 A list of objects used to describe the model:
 
  * `priors`: A list containing all the starting matrices and probabilities.
  * `posteriors`: A list containing all the posterior matrices and probabilities.
- * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`)
- * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
+ * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`).
+ * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`).
+ * `total_iters`: An integer counting the total number of interations done by the algorithm.
 }
 \description{
 A function dedicated to the Variational Bayes EM process, simplified using Stochastic VI.

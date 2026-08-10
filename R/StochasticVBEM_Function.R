@@ -63,7 +63,7 @@
 
 StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, mix.samples = F, maxiter = 1000) {
   mix       <- mix.samples
-  y2        <- array(y,dim = c(D,Y,L))
+  data      <- array(obs,dim = c(D,Y,L))
   maxiter   <- 5  # number of iterations to run the code for
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
@@ -100,7 +100,7 @@ StoVBEM = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs,
   emptyfillers <- list('a_jk' = a_jk, 'b_tj' = b_tj, 'b_tjl' = b_tjl, 'a_1j' = a_1j, 'ct' = ct, 'fvar' = fvar, 'bvar' = bvar, 'b_star' = b_star, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk, 'q_1j' = q_1j)
   #Model Running
   while((abs(improvement_elbo) > tol | improvement_elbo <0) & iter<maxiter){
-    y_sample <- Data_Randomizer(numLoc = L, obs = y2, mix.sample = mix)
+    y_sample <- Data_Randomizer(numLoc = L, obs = data, mix.sample = mix)
     emptyfillers[["del"]] <- y_sample$del_y0
     ## Inputs need to be changed to accommodate for the Stochastic Change
     VBEout <- VBEmpfr.exp(numDays = D, numStates = S, numLoc = L, numMix = M, xi = xi, alpha = alpha, zeta = zeta, gamma_shape = gamma_shape, gamma_rate = gamma_rate, var = emptyfillers, obs = y_sample$data)

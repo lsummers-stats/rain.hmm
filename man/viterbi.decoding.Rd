@@ -13,7 +13,11 @@ viterbi.decoding(b, a, initDist, numDays, numYears, numStates)
 
 \item{initDist}{The Vector of Initial Probabilities for each state.}
 
-\item{numDays}{Number of States decided}
+\item{numDays}{Number of Days in the Data}
+
+\item{numYears}{Number of Years recorded}
+
+\item{numStates}{Number of States decided}
 }
 \value{
 A vector that represents the best state sequence.
