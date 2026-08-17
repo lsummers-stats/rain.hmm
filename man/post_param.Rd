@@ -40,11 +40,13 @@ the initial probabilities each state.}
 }
 \value{
 A list holding four objects:
- * `InitDist` : A vector containing the posterior distribution of `pi_1`, the initial state probabilities.
- * `TransMat` : A matrix containing the posterior distribution of `A`, the transition state probabilities.
- * `MixProb` : A matrix containing the posterior distribution of `C`, the cluster mixture probabilities.
- * `RainRate` : A matrix containing the posterior distribution of `lambda`, the parameter of the exponential distribution
- for rainfall at any given location.
+\itemize{
+\item \code{InitDist} : A vector containing the posterior distribution of \code{pi_1}, the initial state probabilities.
+\item \code{TransMat} : A matrix containing the posterior distribution of \code{A}, the transition state probabilities.
+\item \code{MixProb} : A matrix containing the posterior distribution of \code{C}, the cluster mixture probabilities.
+\item \code{RainRate} : A matrix containing the posterior distribution of \code{lambda}, the parameter of the exponential distribution
+for rainfall at any given location.
+}
 }
 \description{
 A function used to put the posterior distributions of important parameters into a single list.

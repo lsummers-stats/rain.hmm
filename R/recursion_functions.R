@@ -76,8 +76,7 @@ forward_recursion <- function(numObs, numStates, initDist = c(1,rep(0,K-1)), a =
 #'  A function used to calculate backward variables.
 #'
 #'  @details
-#'  This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm
-#'   made for a Hidden Markov Model.
+#'  This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm made for a Hidden Markov Model.
 #'
 #'  @param numObs Number of Observations
 #'
@@ -103,14 +102,6 @@ forward_recursion <- function(numObs, numStates, initDist = c(1,rep(0,K-1)), a =
 #'  @returns A matrix of all your backward variables:
 #'  * The rows correspond to the observations
 #'  * The columns correspond to the states.
-#'
-#'  @examples
-#'  n = 100
-#'  K = 3
-#'  A = matrix(0,nrow = S, ncol = S)
-#'  B = array(1, dim = c(n,K))
-#'  fvars <- forward_recursion(numObs = n, numStates = K, a = A, b = B, ct = fvars[[2]])
-#'  backward_recursion(numObs = n, numStates = K, )
 #'
 #'  @export
 
@@ -244,4 +235,3 @@ backward_recursion_mpfr <- function(numObs, numStates, a = NULL, b = NULL, ct = 
   }
   return(bvar_tilde)
 }
-

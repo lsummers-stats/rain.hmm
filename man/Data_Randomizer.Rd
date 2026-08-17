@@ -17,15 +17,16 @@ Initial set to FALSE.}
 }
 \value{
 A list of objects:
-
- * `y_sample` : The resulting dataset with dimensions days by locations.
- * `del_y0_sample` : The indicator data set that uses 0 if no rain, 1 if there is any rain amount.
+\itemize{
+\item \code{y_sample} : The resulting dataset with dimensions days by locations.
+\item \code{del_y0_sample} : The indicator data set that uses 0 if no rain, 1 if there is any rain amount.
+}
 }
 \description{
 A function used to help sample during Stochastic VI.
 }
 \details{
 In Stochastic VI, we split the data length N into D*Y, days and years. There are then two options on how to pick
- data. Either, one can pick from the same year (all D data points come from the same year) or the data points
- can come from all different years (D data points pick from different years).
+data. Either, one can pick from the same year (all D data points come from the same year) or the data points
+can come from all different years (D data points pick from different years).
 }

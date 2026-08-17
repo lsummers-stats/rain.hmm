@@ -59,7 +59,7 @@ This matrix is usually the result of the VBE.exp function.}
 
 This matrix is usually the result of the VBE.exp function.}
 
-\item{q_tjml}{An augmented `q_tjml` array.
+\item{q_tjml}{An augmented \code{q_tjml} array.
 
 This matrix is usually the result of the VBE.exp function.}
 
@@ -74,16 +74,17 @@ The vector containing the y-values (typically the precipitation amounts) from th
 \item{iter}{The current iteration step.}
 }
 \value{
-A list of objects built from empty objects in `var`:
+A list of objects built from empty objects in \code{var}:
+\itemize{
+\item \code{gamma_jml}: Posterior shape of exponential rate.
+\item \code{delta_jml}: Posterior rate of exponential rate.
+\item \code{xi_j}: Posterior Dirichlet paramters for initial distribution.
+\item \code{alpha_j}: Posterior Dirichlet parameters for transition matrix rows.
+\item \code{zeta_jl}: Posterior Dirichlet parameters for mixing probabilities.
+\item \code{h_jml}: A matrix of coefficients for normalizing the mixture distributions.
+}
 
- * `gamma_jml`: Posterior shape of exponential rate.
- * `delta_jml`: Posterior rate of exponential rate.
- * `xi_j`: Posterior Dirichlet paramters for initial distribution.
- * `alpha_j`: Posterior Dirichlet parameters for transition matrix rows.
- * `zeta_jl`: Posterior Dirichlet parameters for mixing probabilities.
- * `h_jml`: A matrix of coefficients for normalizing the mixture distributions.
-
- @export
+@export
 }
 \description{
 A function dedicated to the maximization step in a Variational Bayes EM algorithm

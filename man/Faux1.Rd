@@ -7,13 +7,13 @@
 \format{
 A list containing:
 \describe{
-  \item{rainfall}{The fake rainfall amount recorded over 1800 days at three different locations. Contains several
-  zero amounts.}
-  \item{hidden}{The hidden state associated with each rainfall calculation.}
-  \item{init_tmat}{The transition matrix used in generating the data.}
-  \item{init_pi}{The starting state probability matrix used in generating the data.}
-  \item{init_lambda}{The starting lambdas used in generating the rainfall amounts.}
-  \item{init_zeta}{The starting probabilities for the mixtures used in generating the rainfall amounts.}
+\item{rainfall}{The fake rainfall amount recorded over 1800 days at three different locations. Contains several
+zero amounts.}
+\item{hidden}{The hidden state associated with each rainfall calculation.}
+\item{init_tmat}{The transition matrix used in generating the data.}
+\item{init_pi}{The starting state probability matrix used in generating the data.}
+\item{init_lambda}{The starting lambdas used in generating the rainfall amounts.}
+\item{init_zeta}{The starting probabilities for the mixtures used in generating the rainfall amounts.}
 }
 }
 \source{

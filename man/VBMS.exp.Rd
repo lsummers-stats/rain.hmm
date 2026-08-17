@@ -38,17 +38,17 @@ VBMS.exp(
 \item{xi}{The Current Matrix for the Initial States.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the initial probabilities each state.}
+the initial probabilities each state.}
 
 \item{alpha}{The Current Matrix for the Transitions.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the transition probabilities from state to state.}
+the transition probabilities from state to state.}
 
 \item{zeta}{The Current Matrix for the Mixtures.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the mixture probabilities at each location.}
+the mixture probabilities at each location.}
 
 \item{gamma_shape}{The Current matrix for the Shape Parameters.
 
@@ -61,7 +61,7 @@ The current matrix of the rate hyperparameters for each Gamma mixture component.
 \item{q_1j}{Expectation of latent variable s_1j.
 
 The latent variable s_tj represents if, at time t, the state is j.
- s_1j is the initial states.}
+s_1j is the initial states.}
 
 \item{q_tj}{Expectation of latent variable s_tj.
 
@@ -70,7 +70,7 @@ The latent variable s_tj represents if, at time t, the state is j.}
 \item{q_tjml}{Expectation of latent variable r_tjml.
 
 The latent variable r_tjml represents an indicator variable with 1 if y_tl (the data point at time t and location l)
- comes from mixture m, and s_t = j.}
+comes from mixture m, and s_t = j.}
 
 \item{q_jk}{Expectation of state transistions
 
@@ -86,25 +86,26 @@ The priors are needed for xi, alpha, zeta, gamma_shape, and gamma_rate.}
 }
 \value{
 A list of objects:
-
- * `gamma_jml`: Posterior shape of exponential rate.
- * `delta_jml`: Posterior rate of exponential rate.
- * `xi_j`: Posterior Dirichlet paramters for initial distribution.
- * `alpha_j`: Posterior Dirichlet parameters for transition matrix rows.
- * `zeta_jl`: Posterior Dirichlet parameters for mixing probabilities.
- * `h_jml`: A matrix of coefficients for normalizing the mixture distributions.
+\itemize{
+\item \code{gamma_jml}: Posterior shape of exponential rate.
+\item \code{delta_jml}: Posterior rate of exponential rate.
+\item \code{xi_j}: Posterior Dirichlet paramters for initial distribution.
+\item \code{alpha_j}: Posterior Dirichlet parameters for transition matrix rows.
+\item \code{zeta_jl}: Posterior Dirichlet parameters for mixing probabilities.
+\item \code{h_jml}: A matrix of coefficients for normalizing the mixture distributions.
+}
 }
 \description{
 A function dedicated to the maximization step in a Variational Bayes EM algorithm, simplified using Stochastic VI.
 }
 \details{
 Used as part of the Stochastic Variational Bayes EM Process for a Hidden Markov Model designed
- for rain data.
+for rain data.
 
 Stochastic VI assumes exchangeablility for the emission distributions used for each year. Thus
- rather than trying to compute N data points, we split the data with N = D*Y, days and years, then account for the number of years
- by multiplying parts of the update by Y. However, the user must decide some step size tau. The step size must
- fulfill the Robbins-Monro conditions.
+rather than trying to compute N data points, we split the data with N = D*Y, days and years, then account for the number of years
+by multiplying parts of the update by Y. However, the user must decide some step size tau. The step size must
+fulfill the Robbins-Monro conditions.
 
- In particular, this function uses stochastic gradient ascent with step size tau = 1/iter.
+In particular, this function uses stochastic gradient ascent with step size tau = 1/iter.
 }

@@ -33,32 +33,34 @@ VBE.exp(
 \item{xi}{The Current Matrix for the Initial States.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the initial probabilities each state.}
+the initial probabilities each state.}
 
 \item{alpha}{The Current Matrix for the Transitions.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the transition probabilities from state to state.}
+the transition probabilities from state to state.}
 
 \item{zeta}{The Current Matrix for the Mixtures.
 
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
- the mixture probabilities at each location.}
+the mixture probabilities at each location.}
 
 \item{var}{A list of matrices and vectors objects:
-* `del_y0`: Rain indicator function. Typically an `ifelse` function.
-* `a_jk`: Posterior state kernel, a matrix filled with 0's with dimensions: `numStates` by `numStates`.
-* `b_tj`: Posterior emission kernel, an array filled with 1's with dimensions: `numDays` by `numStates` by `numYears`.
-* `b_tjl`: An augmented `b_tj` array, filled with 0's with dimensions: `numDays` by `numStates` by `numYears` by `numLoc`.
-* `a_1j`: Posterior initial probability kernel, a matrix with dimensions: `numYears` by `numStates`.
-* `ct`: A matrix filled with 0's with dimensions: `numDays` by `numYears`.
-* `fvar`: An array filled with 0's with dimensions: `numDays` by `numStates` by `numYears`.
-* `bvar`: An array filled with 0's with dimensions: `numDays` by `numStates` by `numYears`.
-* `b_star`: An array filled with 0's with dimensions: `numDays` by `numStates` by `numMix`.
-* `q_tj`: Posterior probability of stationary distribution, an array filled with 0's with dimensions: `numDays` by `numStates` by `numYears`.
-* `q_tjml`: An augmented `q_tjml` array, filled with 0's with dimensions: `numDays` by `numStates` by `numMix` by `numStates` by `numLoc`.
-* `q_jk`: Posterior joint transition probability matrix, an array filled with 0's with dimensions: `numStates` by `numStates` by `numDays` - 1 by `numYears`.
-* `q_1j`: Posterior initial probability, a matrix filled with 0's with dimensions: `numYears` by `numStates`.}
+\itemize{
+\item \code{del_y0}: Rain indicator function. Typically an \code{ifelse} function.
+\item \code{a_jk}: Posterior state kernel, a matrix filled with 0's with dimensions: \code{numStates} by \code{numStates}.
+\item \code{b_tj}: Posterior emission kernel, an array filled with 1's with dimensions: \code{numDays} by \code{numStates} by \code{numYears}.
+\item \code{b_tjl}: An augmented \code{b_tj} array, filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numYears} by \code{numLoc}.
+\item \code{a_1j}: Posterior initial probability kernel, a matrix with dimensions: \code{numYears} by \code{numStates}.
+\item \code{ct}: A matrix filled with 0's with dimensions: \code{numDays} by \code{numYears}.
+\item \code{fvar}: An array filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numYears}.
+\item \code{bvar}: An array filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numYears}.
+\item \code{b_star}: An array filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numMix}.
+\item \code{q_tj}: Posterior probability of stationary distribution, an array filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numYears}.
+\item \code{q_tjml}: An augmented \code{q_tjml} array, filled with 0's with dimensions: \code{numDays} by \code{numStates} by \code{numMix} by \code{numStates} by \code{numLoc}.
+\item \code{q_jk}: Posterior joint transition probability matrix, an array filled with 0's with dimensions: \code{numStates} by \code{numStates} by \code{numDays} - 1 by \code{numYears}.
+\item \code{q_1j}: Posterior initial probability, a matrix filled with 0's with dimensions: \code{numYears} by \code{numStates}.
+}}
 
 \item{obs}{The vector of observations.
 
@@ -73,19 +75,21 @@ The current matrix of the shape hyperparameters for each Gamma mixture component
 The current matrix of the rate hyperparameters for each Gamma mixture component.}
 }
 \value{
-A list of objects built from empty objects in `var`:
- * `a_jk`: The posterior state kernel.
- * `b_tj`: Posterior emission kernel.
- * `c_t` : A series of constants used to normalize the forward variables.
- * `q_1j`: Posterior initial probability.
- * `q_tj`: Posterior probability of stationary distribution.
- * `q_tjml`: An augmented `q_tjml` array.
- * `q_jk`: Posterior joint transition probability matrix.
+A list of objects built from empty objects in \code{var}:
+\itemize{
+\item \code{a_jk}: The posterior state kernel.
+\item \code{b_tj}: Posterior emission kernel.
+\item \code{c_t} : A series of constants used to normalize the forward variables.
+\item \code{q_1j}: Posterior initial probability.
+\item \code{q_tj}: Posterior probability of stationary distribution.
+\item \code{q_tjml}: An augmented \code{q_tjml} array.
+\item \code{q_jk}: Posterior joint transition probability matrix.
+}
 }
 \description{
 A function dedicated to the expectation step in a Variational Bayes EM algorithm
 }
 \details{
 Used as part of the Variational Bayes EM Process for a Hidden Markov Model designed
- for rain data.
+for rain data.
 }

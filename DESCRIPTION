@@ -14,7 +14,6 @@ Description: More about what it does (maybe more than one line).
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: devtools,
-        roxygen2,
-        Rmpfr
+Imports:  Rmpfr
 Config/roxygen2/version: 8.1.0
+Roxygen: list(markdown = TRUE)

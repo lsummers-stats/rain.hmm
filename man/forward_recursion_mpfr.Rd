@@ -19,40 +19,42 @@ forward_recursion_mpfr(
 \details{
 A function used to calculate forward variables with high precision.
 
- @details
+@details
 
- This function is left to show the programming done for the Forward step in the Forward-Backward Algorithm
- made for a Hidden Markov Model. One can edit the amount of precision using the Rmpfr package.
+This function is left to show the programming done for the Forward step in the Forward-Backward Algorithm
+made for a Hidden Markov Model. One can edit the amount of precision using the Rmpfr package.
 
- @param numObs Number of Observations
+@param numObs Number of Observations
 
- The total number of observations in your data set.
+The total number of observations in your data set.
 
- @param numStates Number of States
+@param numStates Number of States
 
- The total number of states planned for the Hidden Markov Model
+The total number of states planned for the Hidden Markov Model
 
- @param initDist Initial Distribution
+@param initDist Initial Distribution
 
- The initial probability kernel. If no value is given, it will automatically give
- the first state a probability of 1, and all states a probability of 0.
+The initial probability kernel. If no value is given, it will automatically give
+the first state a probability of 1, and all states a probability of 0.
 
- @param a State Transition Matrix
+@param a State Transition Matrix
 
- The current state transition matrix. Input can be either a matrix or an array.
+The current state transition matrix. Input can be either a matrix or an array.
 
- @param b State Emission Matrix
+@param b State Emission Matrix
 
- The current state emission matrix. Input can be either a matrix or an array.
+The current state emission matrix. Input can be either a matrix or an array.
 
- @param Precision The amount of bits tracked by R
+@param Precision The amount of bits tracked by R
 
- For more details, see the Rmpfr package.
+For more details, see the Rmpfr package.
 
- @returns A list holding two objects:
- * `fvar_tilde` : A matrix containing all your Forward Variables. Each row corresponds to each observation
- and each column corresponds to each state.
- * `ct` : A vector containing the constant used to normalize `F_tilde` at each point in time `t`.
+@returns A list holding two objects:
+\itemize{
+\item \code{fvar_tilde} : A matrix containing all your Forward Variables. Each row corresponds to each observation
+and each column corresponds to each state.
+\item \code{ct} : A vector containing the constant used to normalize \code{F_tilde} at each point in time \code{t}.
+}
 
- @export
+@export
 }

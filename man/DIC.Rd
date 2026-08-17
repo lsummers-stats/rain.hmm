@@ -49,8 +49,8 @@ DIC(
 }
 \value{
 A list of two objects:
-*`DIC`: A single value representing the DIC for the given model parameters.
-*`pd`: A value used in calculating the DIC.
+*\code{DIC}: A single value representing the DIC for the given model parameters.
+*\code{pd}: A value used in calculating the DIC.
 }
 \description{
 A function designed to calculate an approximation of the DIC.

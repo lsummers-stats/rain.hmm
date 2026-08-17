@@ -22,30 +22,32 @@ A function used to calculate backward variables variables with high precision.
 This function is left to show the programming done for the Backward step in the Forward-Backward Algorithm
 made for a Hidden Markov Model. One can edit the amount of precision using the Rmpfr package.
 
- @param numObs Number of Observations
+@param numObs Number of Observations
 
- The total number of observations in your data set.
+The total number of observations in your data set.
 
- @param numStates Number of States
+@param numStates Number of States
 
- The total number of states planned for the Hidden Markov Model
+The total number of states planned for the Hidden Markov Model
 
- @param a State Transition Matrix
+@param a State Transition Matrix
 
- The current state transition matrix. Input can be either a matrix or an array.
+The current state transition matrix. Input can be either a matrix or an array.
 
- @param b State Emission Matrix
+@param b State Emission Matrix
 
- The current state emission matrix. Input can be either a matrix or an array.
+The current state emission matrix. Input can be either a matrix or an array.
 
- @param ct Normalizing Constant
+@param ct Normalizing Constant
 
- A vector containing constants normalizing `F_tilde`, the Forward Variables. This vector is typically
- found from running the Forward part of the Forward Algorithm.
+A vector containing constants normalizing \code{F_tilde}, the Forward Variables. This vector is typically
+found from running the Forward part of the Forward Algorithm.
 
- @returns A matrix of all your backward variables:
- * The rows correspond to the observations
- * The columns correspond to the states.
+@returns A matrix of all your backward variables:
+\itemize{
+\item The rows correspond to the observations
+\item The columns correspond to the states.
+}
 
- @export
+@export
 }

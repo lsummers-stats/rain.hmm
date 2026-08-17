@@ -60,17 +60,19 @@ The vector containing the y-values (typically the precipitation amounts) from th
 \item{maxiter}{The maximum number of iterations the algorithm will do before stopping.
 
 The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
- of 10^-9. The default value is 1000.}
+of 10^-9. The default value is 1000.}
 }
 \value{
 A list of objects used to describe the model:
- * `priors`: A list containing all the starting matrices and probabilities.
- * `posteriors`: A list containing all the posterior matrices and probabilities.
- * `ELBO`: A vector tracking the ELBO as the model progresses (with spot `i` corresponding to iteration `i`)
- * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
- * `iternum`: An integer denoting how many iterations took place.
+\itemize{
+\item \code{priors}: A list containing all the starting matrices and probabilities.
+\item \code{posteriors}: A list containing all the posterior matrices and probabilities.
+\item \code{ELBO}: A vector tracking the ELBO as the model progresses (with spot \code{i} corresponding to iteration \code{i})
+\item \code{DIC}: A vector tracking the DIC as the model progresses (with spot \code{i} corresponding to iteration \code{i})
+\item \code{iternum}: An integer denoting how many iterations took place.
+}
 
- @export
+@export
 }
 \description{
 A function dedicated to running the Variational Bayes EM algorithm.
