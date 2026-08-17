@@ -46,7 +46,7 @@ print(Model$posteriors$pi)
     ## [1] 0.0006409779 0.0032459527 0.9961130694
 
 ``` r
-print(Model$posteriors$transmat)
+Model$posteriors$transmat
 ```
 
     ##           [,1]      [,2]      [,3]
@@ -71,7 +71,64 @@ intensive method. This is the purpose of the stochastic version of the
 function.
 
 ``` r
-#Stochastic Here
+library(HMMVI)
+library(Rmpfr)
 ```
+
+    ## Warning: package 'Rmpfr' was built under R version 4.5.3
+
+    ## Loading required package: gmp
+
+    ## Warning: package 'gmp' was built under R version 4.5.3
+
+    ## 
+    ## Attaching package: 'gmp'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     %*%, apply, crossprod, matrix, tcrossprod
+
+    ## C code of R package 'Rmpfr': GMP using 64 bits per limb
+
+    ## 
+    ## Attaching package: 'Rmpfr'
+
+    ## The following object is masked from 'package:gmp':
+    ## 
+    ##     outer
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     dbinom, dchisq, dgamma, dnbinom, dnorm, dpois, dt, pgamma, pnorm
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     cbind, pmax, pmin, rbind
+
+``` r
+#Define some hyperparameter guesses
+gamma_0     <- matrix(data = c(.5,2,1.5,5,2,10),nrow = 3,ncol = 2,byrow = T) # shape of exponential rate
+gamma_0     <- array(gamma_0,dim = c(3,2,10))
+delta_0     <- matrix(data = c(2,2,2,2,2,2),nrow = 3,ncol = 2,byrow = T) # rate of exponential rate
+delta_0     <- array(delta_0,dim = c(3,2,10))
+zeta_0      <- matrix(data = c(3,4,3,3,3.5,3.5,4,3,3),nrow = 3,ncol = 3,byrow = T) # Dirichlet prior parameters for mixing probabilities
+zeta_0      <- array(zeta_0,dim = c(3,3,10))
+alpha_0     <- matrix(rep(10,9),nrow = 3,byrow = T)/3 # Dirichlet prior for transition matrix rows
+xi_0        <- c(.4,.3,.3) # Dirichlet prior for initial probabilities
+
+StoModel <- StoVBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, xi = xi_0, alpha = alpha_0, zeta = zeta_0, gamma_shape = gamma_0, gamma_rate = delta_0, obs = Faux2, mix.samples = F)
+```
+
+``` r
+print(StoModel$posteriors$pi)
+```
+
+    ## [1] 0.6104147 0.1947920 0.1947933
+
+``` r
+print(StoModel$iternum)
+```
+
+    ## [1] 10
 
 # Gamma Mixtures
