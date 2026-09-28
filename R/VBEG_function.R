@@ -1,11 +1,11 @@
-#' Variational Bayes Expectation Exponential Formula
+#' Variational Bayes Expectation Gamma Formula
 #'
 #' @description
 #' A function dedicated to the expectation step in a Variational Bayes EM algorithm
 #'
 #' @details
 #' Used as part of the Variational Bayes EM Process for a Hidden Markov Model designed
-#'  for rain data. It is assumed the rainfall is calculated using an Exponential Distribution.
+#'  for rain data. It is assumed the rainfall is calculated using a Gamma Distribution.
 #'
 #' @param numDays Number of Days per Year.
 #'
@@ -32,13 +32,25 @@
 #' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
 #'  the mixture probabilities at each location.
 #'
-#' @param gamma.post The Current matrix for the Shape Parameters.
+#' @param gamma The Current matrix for the gamma hyperparameters of the GC2 distribution.
 #'
-#' The current matrix of the shape hyperparameters for each Gamma mixture component.
+#' @param delta The Current Matrix for the delta hyperparameters of the GC2 distribution.
 #'
-#' @param delta.post The Current Matrix for the Rate Parameters.
+#' @param logbeta The Current Matrix for the log of the beta hyperparameters of the GC2 distribution.
 #'
-#' The current matrix of the rate hyperparameters for each Gamma mixture component.
+#' @param delta The Current Matrix for the delta hyperparameters of the GC2 distribution.
+#'
+#' @param exp_omega A matrix of the expectation of the shape parameter.
+#'
+#'  The command `omega_constant` and `exp_omega` can be used to calculate these values.
+#'
+#' @param exp_psi_omega A matrix of the expectation a special expectation of the shape parameter.
+#'
+#'  The command `omega_constant` and `exp_psi_omega` can be used to calculate these values.
+#'
+#' @param exp_lomega A matrix of the expectation of the log-gamma of the shape parameter.
+#'
+#'  The command `omega_constant` and `exp_l_omega` can be used to calculate these values.
 #'
 #' @param var A list of matrices and vectors objects:
 #' * `del_y0`: Rain indicator function. Typically an `ifelse` function.
@@ -71,7 +83,7 @@
 #' @export
 
 
-VBE.exp <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zeta, gamma_shape, gamma_rate, var, obs){
+VBE.gam <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zeta, gamma, delta, logbeta, theta, exp_omega, exp_psi_omega, exp_lomega, var, obs){
   del_y0      <- var$del
   a_jk        <- var$a_jk # posterior state kernel
   b_tj        <- var$b_tj
@@ -94,7 +106,7 @@ VBE.exp <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zet
       for(n in 1:numYears){
         tmp <- 0
         for(m in 2:numMix){
-          tmp <- tmp + (1- del_y0[,n,l])*exp(digamma(zeta[j,m,l]) - digamma(sum(zeta[j,,l])) + digamma(gamma_shape[j,m-1,l]) - log(gamma_rate[j,m-1,l]) - obs[,n,l]*(gamma_shape[j,m-1,l]/gamma_rate[j,m-1,l] ))}
+          tmp <- tmp + (1- del_y0[,n,l])*exp(digamma(zeta[j,m,l]) - digamma(sum(zeta[j,,l])) + exp_psi_omega[j,m-1,l] - log(exp_lomega[j,m-1,l]) + exp_omega[j,m-1,l]*(log(theta[j,m-1,l]) + obs[,n,l] + gamma[j,m-1,l]/theta[j,m-1,l]))}
         b_tjl[,j,n,l] <- del_y0[,n,l]*exp(digamma(zeta[j,1,l]) - digamma(sum(zeta[j,,l])) ) + tmp
       }
   }
@@ -135,11 +147,10 @@ VBE.exp <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zet
       for(j in 1:numStates){
         b_star[,j,1] <- del_y0[,n,l]
         for(m in 2:numMix)
-          b_star[,j,m] <- (1-del_y0[,n,l])*exp(digamma(zeta[j,m,l]) - digamma(sum(zeta[j,,l])) +
-                                                 digamma(gamma_shape[j,m-1,l]) - log(gamma_rate[j,m-1,l]) - obs[,n,l]*(gamma_shape[j,m-1,l]/gamma_rate[j,m-1,l]) )
+          b_star[,j,m] <- (1- del_y0[,n,l])*exp(digamma(zeta[j,m,l]) - digamma(sum(zeta[j,,l])) + exp_psi_omega[j,m-1,l] - log(exp_lomega[j,m-1,l]) + exp_omega[j,m-1,l]*(log(theta[j,m-1,l]) + obs[,n,l] + gamma[j,m-1,l]/theta[j,m-1,l]))
         sum_b <- rowSums(b_star[,j,],dims = 1)
         q_tjml[,j,-1,n,l] <- b_star[,j,-1]/sum_b
         q_tjml[,j,1,n,l] <- b_star[,j,1]
       }
-  output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'ct' = ct,'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
+  output = list('a_jk' = a_jk, 'bstar' = b_star, 'b_tj' = b_tj, 'ct' = ct ,'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
 }

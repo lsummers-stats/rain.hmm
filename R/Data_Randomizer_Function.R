@@ -39,3 +39,5 @@ Data_Randomizer <- function(numLoc, obs, mix.sample = F){
   del_y0_sample = ifelse(y_sample==0,1,0)
   output = list('data' = y_sample, 'del_y0' = del_y0_sample)
 }
+
+#' @import Rmpfr
