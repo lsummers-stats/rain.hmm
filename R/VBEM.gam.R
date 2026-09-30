@@ -51,6 +51,8 @@
 #'
 #'  The algorithm will stop earlier than this number if the amount of improvement is smaller than a tolerance
 #'  of 10^-9. The default value is 1000.
+#'
+#'  @export
 VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, logbetah, obs, maxiter) {
   elbo      <- rep(0,maxiter)
   elbo_old  <- -50000

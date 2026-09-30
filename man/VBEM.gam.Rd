@@ -63,7 +63,9 @@ The vector containing the y-values (typically the precipitation amounts) from th
 \item{maxiter}{The maximum number of iterations the algorithm will do before stopping.
 
 The algorithm will stop earlier than this number if the amount of improvement is smaller than a tolerance
-of 10^-9. The default value is 1000.}
+of 10^-9. The default value is 1000.
+
+@export}
 }
 \description{
 A function dedicated to running the Variational Bayes EM algorithm.
