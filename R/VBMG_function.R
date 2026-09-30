@@ -70,7 +70,7 @@
 #'  @export
 
 
-VBM.gam = function(numStates, numLoc, numMix, xi, alpha, zeta, gamma, delta, theta, logbeta, q_1j, q_tj, q_tjml, q_jk, obs, iter){
+VBM.gam = function(numStates, numLoc, numMix, xi, alpha, zeta, gamma_hyper, delta_hyper, theta_hyper, log_beta_hyper, q_1j, q_tj, q_tjml, q_jk, obs, iter){
   gamma_jml    <- gamma_hyper # posterior shape of exponential rate
   delta_jml    <- delta_hyper # posterior rate of exponential rate
   theta_jml    <- theta_hyper # posterior rate of exponential rate

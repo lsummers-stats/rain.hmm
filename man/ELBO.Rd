@@ -2,7 +2,7 @@
 % Please edit documentation in R/tracker_functions.R
 \name{ELBO}
 \alias{ELBO}
-\title{ELBO Function}
+\title{ELBO Exponential Function}
 \usage{
 ELBO(
   numStates,
@@ -57,7 +57,7 @@ ELBO(
 A single value representing the ELBO for the given model parameters.
 }
 \description{
-A function designed to calculate an approximation of the ELBO.
+A function designed to calculate an approximation of the ELBO when using an exponential function to predict rainfall.
 }
 \details{
 Since the ELBO is computationally difficult, or sometimes impossible, the function was designed to approximated it.

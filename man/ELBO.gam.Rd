@@ -63,15 +63,15 @@ ELBO.gam(
 
 \item{exp_omega}{A matrix of the expectation of the shape parameter.
 
-The command \code{omega_constant} and \code{exp_omega} can be used to calculate these values.}
+The commands \code{omega_constant} and \code{exp_omega} can be used to calculate these values.}
 
 \item{exp_psi_omega}{A matrix of the expectation a special expectation of the shape parameter.
 
-The command \code{omega_constant} and \code{exp_psi_omega} can be used to calculate these values.}
+The commands\code{omega_constant} and \code{exp_psi_omega} can be used to calculate these values.}
 
 \item{exp_lomega}{A matrix of the expectation of the log-gamma of the shape parameter.
 
-The command \code{omega_constant} and \code{exp_l_omega} can be used to calculate these values.}
+The commands \code{omega_constant} and \code{exp_l_omega} can be used to calculate these values.}
 
 \item{obs}{The vector of observations.}
 

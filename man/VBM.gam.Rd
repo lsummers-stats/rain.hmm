@@ -11,10 +11,10 @@ VBM.gam(
   xi,
   alpha,
   zeta,
-  gamma,
-  delta,
-  theta,
-  logbeta,
+  gamma_hyper,
+  delta_hyper,
+  theta_hyper,
+  log_beta_hyper,
   q_1j,
   q_tj,
   q_tjml,
@@ -45,12 +45,6 @@ the transition probabilities from state to state.}
 The current matrix of the hyperparameters for the Dirichlet distribution used to describe
 the mixture probabilities at each location.}
 
-\item{gamma}{The Current matrix for the gamma hyperparameters of the GC2 distribution.}
-
-\item{delta}{The Current Matrix for the delta hyperparameters of the GC2 distribution.}
-
-\item{logbeta}{The Current Matrix for the log of the beta hyperparameters of the GC2 distribution.}
-
 \item{q_1j}{Posterior initial probability.
 
 This matrix is usually the result of the VBE.exp function.}
@@ -72,6 +66,12 @@ This matrix is usually the result of the VBE.exp function.}
 The vector containing the y-values (typically the precipitation amounts) from the data.}
 
 \item{iter}{The current iteration step.}
+
+\item{gamma}{The Current matrix for the gamma hyperparameters of the GC2 distribution.}
+
+\item{logbeta}{The Current Matrix for the log of the beta hyperparameters of the GC2 distribution.}
+
+\item{delta}{The Current Matrix for the delta hyperparameters of the GC2 distribution.}
 }
 \value{
 A list of objects built from empty objects in \code{var}:

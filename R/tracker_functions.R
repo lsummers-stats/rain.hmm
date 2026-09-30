@@ -1,7 +1,7 @@
-#' ELBO Function
+#' ELBO Exponential Function
 #'
 #' @description
-#' A function designed to calculate an approximation of the ELBO.
+#' A function designed to calculate an approximation of the ELBO when using an exponential function to predict rainfall.
 #'
 #' @details
 #' Since the ELBO is computationally difficult, or sometimes impossible, the function was designed to approximated it.
@@ -305,15 +305,15 @@ StoDIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTr
 #'
 #' @param exp_omega A matrix of the expectation of the shape parameter.
 #'
-#'  The command `omega_constant` and `exp_omega` can be used to calculate these values.
+#'  The commands `omega_constant` and `exp_omega` can be used to calculate these values.
 #'
 #' @param exp_psi_omega A matrix of the expectation a special expectation of the shape parameter.
 #'
-#'  The command `omega_constant` and `exp_psi_omega` can be used to calculate these values.
+#'  The commands`omega_constant` and `exp_psi_omega` can be used to calculate these values.
 #'
 #' @param exp_lomega A matrix of the expectation of the log-gamma of the shape parameter.
 #'
-#'  The command `omega_constant` and `exp_l_omega` can be used to calculate these values.
+#'  The commands `omega_constant` and `exp_l_omega` can be used to calculate these values.
 #'
 #' @param obs The vector of observations.
 #'
