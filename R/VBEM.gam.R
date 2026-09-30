@@ -1,0 +1,134 @@
+#' Variational Bayes EM Algorithm for Gamma Rainfall
+#'
+#' @description
+#' A function dedicated to running the Variational Bayes EM algorithm.
+#'
+#' @details
+#' Used to run the Variational Bayes EM Process for a Hidden Markov Model designed
+#'  for rain data. It is assumed the rainfall is calculated using a Gamma Distribution.
+#'
+#' @param numDays Number of Days per Year.
+#'
+#' @param numStates Number of States laid out in the model.
+#'
+#' @param numYears Number of Years collected.
+#'
+#' @param numLoc Number of locations data recorded in the data.
+#'
+#' @param numMix Number of mixtures predetermined by user.
+#'
+#' @param xi The Current Matrix for the Initial States.
+#'
+#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
+#'  the initial probabilities each state.
+#'
+#' @param alpha The Current Matrix for the Transitions.
+#'
+#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
+#'  the transition probabilities from state to state.
+#'
+#' @param zeta The Current Matrix for the Mixtures.
+#'
+#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
+#'  the mixture probabilities at each location.
+#'
+#' @param gamma The Current matrix for the gamma hyperparameters of the GC2 distribution.
+#'
+#' @param delta The Current Matrix for the delta hyperparameters of the GC2 distribution.
+#'
+#' @param logbeta The Current Matrix for the log of the beta hyperparameters of the GC2 distribution.
+#'
+#' @param delta The Current Matrix for the delta hyperparameters of the GC2 distribution.
+#'
+#' @param obs The vector of observations.
+#'
+#' The vector containing the y-values (typically the precipitation amounts) from the data.
+#'
+#' @param maxiter The maximum number of iterations the algorithm will do before stopping.
+#'
+#' The algoritm will stop earlier than this number if the amount of improvement is smaller than a tolerance
+#'  of 10^-9. The default value is 1000.
+VBEM.gam = function(D, S, Y, L, M, xi, alpha, zeta, gammah, deltah, thetah, logbetah, obs, maxiter) {
+  elbo      <- rep(0,maxiter)
+  elbo_old  <- -50000
+  elbo[1]   <- -25000
+  tol       <- 10^(-9)
+  iter      <- 1
+  improvement_elbo  <- (elbo_old-elbo[1])/elbo_old
+  lambda.post = array(0,dim = c(S,M-1,L))
+  omega.post = array(0,dim = c(S,M-1,L))
+  zeta.post = array(0,dim = c(S,M,L))
+  tmat.post = matrix(0,S,S)
+  pi.post = rep(0,S)
+  #Empty Variables
+  del_y0      <- ifelse(obs==0,1,0)
+  a_jk        <- matrix(0,nrow = S, ncol = S) # posterior state kernel
+  b_tj        <- array(1, dim = c(D,S,Y)) # posterior emission kernel
+  b_tjl       <- array(0,dim = c(D,S,Y,L))
+  a_1j        <- matrix(0,nrow = Y,ncol = S) # posterior initial probability kernel
+
+  ct          <- matrix(0,nrow = D,ncol = Y)
+  fvar        <- array(0,dim = c(D,S,Y))
+  bvar        <- array(0,dim = c(D,S,Y))
+  b_star      <- array(0,dim = c(D,S,M))
+
+  q_tj        <- array(0,dim = c(D,S,Y)) # posterior probability of stationary distribution
+  q_tjml      <- array(0,dim = c(D,S,M,Y,L))
+  q_jk        <- array(0,dim=c(S,S,D-1,Y)) # posterior joint transition probability matrix
+  q_1j        <- matrix(0,nrow = Y, ncol = S) # posterior initial probability
+
+  omega_norm <- array(1, c(S,M-1,L))
+  omega_exp <- array(0, c(S,M-1,L))
+  omega_lgamma <- array(0, c(S,M-1,L))
+  omega_psi <- array(0, c(S,M-1,L))
+
+  for(j in 1:S){
+    for(l in 1:L){
+      for(m in 2:M){
+        omega_norm[j,m-1,l] <- omega_constant(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l])$value
+        omega_exp[j,m-1,l] <- exp_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+        omega_lgamma[j,m-1,l] <- exp_l_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+        omega_psi[j,m-1,l] <- exp_psi_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+      }
+    }
+  }
+
+  emptyfillers <- list('del' = del_y0, 'a_jk' = a_jk, 'b_tj' = b_tj, 'b_tjl' = b_tjl, 'a_1j' = a_1j, 'ct' = ct, 'fvar' = fvar, 'bvar' = bvar, 'b_star' = b_star, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk, 'q_1j' = q_1j)
+  #Model Running
+  while((abs(improvement_elbo) > tol | improvement_elbo <0) & iter<maxiter){
+    VBEout <- VBE.gam(numDays = D, numStates = S, numYears = Y, numLoc = L, numMix = M, xi = xi, alpha = alpha, zeta = zeta, gamma = gammah, delta = deltah, logbeta = logbetah, theta = thetah, exp_omega = omega_exp, exp_psi_omega = omega_psi, exp_lomega = omega_lgamma, var = emptyfillers, obs)
+    VBMout <- VBM.gam(numStates = S, numLoc = L, numMix = M, xi = xi, alpha = alpha, zeta = zeta, gamma_hyper = gammah, delta_hyper = deltah, theta_hyper = thetah, log_beta_hyper = logbetah, VBEout$q_1j, VBEout$q_tj, VBEout$q_tjml, VBEout$q_jk, obs)
+    ## Update iter
+    iter = iter+1
+    ##Quick update
+    xi <- VBMout$xi_j
+    alpha <- VBMout$alpha
+    zeta <- VBMout$zeta_jl
+    gammah <- VBMout$gamma_jml
+    deltah <- VBMout$delta_jml
+    thetah <- VBMout$theta_jml
+    for(j in 1:S){
+      for(l in 1:L){
+        for(m in 2:M){
+          omega_norm[j,m-1,l] <- omega_constant(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l])$value
+          omega_exp[j,m-1,l] <- exp_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+          omega_lgamma[j,m-1,l] <- exp_l_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+          omega_psi[j,m-1,l] <- exp_psi_omega(gammah[j,m-1,l], deltah[j,m-1,l], thetah[j,m-1,l], logbetah[j,m-1,l], con = omega_norm[j,m-1,l])
+        }
+      }
+    }
+    #ELBO
+    elboresult <- ELBO.gam(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_hyper = VBMout$gamma_jml, delta_hyper = VBMout$delta_jml, theta_hyper = VBMout$theta_jml, logbetaprior = logbetah, logbetapost = VBMout$log_beta_jml, exp_omega = omega_exp, exp_psi_omega = omega_psi, exp_lomega = omega_lgamma, obs, h = VBMout$h_jml)
+    logbetah <- VBMout$log_beta_jml
+    elbo[iter] <- elboresult
+    elbo_old <- elbo[iter-1]
+    improvement_elbo <- (elbo_old-elbo[iter])/elbo_old}
+  for(l in 1:L){
+    params <- post_param.gam(numStates = K,numMix = M, gamma.post = VBMout$gamma_jml[,,l], delta.post = VBMout$delta_jml[,,l], theta.post = VBMout$theta_jml[,,l], exp_alpha = omega_exp[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
+    zeta.post[,,l]   <- zeta.post[,,l] + params$MixProb
+    lambda.post[,,l] <- lambda.post[,,l] + params$Rainfall_rate
+    omega.post[,,l] <- omega.post[,,l] + params$Rainfall_shape}
+  pi.post     <- params$InitDist
+  tmat.post   <- params$TransMat
+  posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_hyper' = gammah, 'delta_hyper' = deltah, 'theta_hyper' = thetah, 'beta_hyper' = logbetah, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post, 'omega' = omega.post)
+  output = list('posteriors' = posteriors, 'ELBO' = elbo)}
