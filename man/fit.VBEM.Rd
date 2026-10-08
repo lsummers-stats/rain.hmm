@@ -65,8 +65,6 @@ A list of objects used to describe the model:
 \item \code{DIC}: A vector tracking the DIC as the model progresses (with spot \code{i} corresponding to iteration \code{i})
 \item \code{iternum}: An integer denoting how many iterations took place.
 }
-
-@export
 }
 \description{
 A function dedicated to running the Variational Bayes EM algorithm with several different types of models.

@@ -3,6 +3,7 @@
 export(exp_l_omega)
 export(exp_omega)
 export(exp_psi_omega)
+export(fit.VBEM)
 export(generate.hmm)
 export(generate.mc)
 export(omega_constant)

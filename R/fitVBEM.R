@@ -48,7 +48,7 @@
 #'  * `DIC`: A vector tracking the DIC as the model progresses (with spot `i` corresponding to iteration `i`)
 #'  * `iternum`: An integer denoting how many iterations took place.
 #'
-#'  @export
+#' @export
 
 fit.VBEM <- function(data, L, S, M = 2, D, Y = 1, dist = c("exp", "gamma", "stoch.exp"), hypers, mix.samples = F, maxiter = 1000){
   if(dist == "exp" & stochastic == F){
