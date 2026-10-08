@@ -51,7 +51,7 @@
 #' @export
 
 fit.VBEM <- function(data, L, S, M = 2, D, Y = 1, dist = c("exp", "gamma", "stoch.exp"), hypers, mix.samples = F, maxiter = 1000){
-  if(dist == "exp" & stochastic == F){
+  if(dist == "exp"){
     VBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
           gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter)
   }
