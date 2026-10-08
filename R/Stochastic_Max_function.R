@@ -1,108 +1,17 @@
-#' Stochastic Maximization Formula
-#'
-#' @description
-#' A function dedicated to the maximization step in a Variational Bayes EM algorithm, simplified using Stochastic VI.
-#'
-#' @details
-#' Used as part of the Stochastic Variational Bayes EM Process for a Hidden Markov Model designed
-#'  for rain data.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numLoc Number of locations data recorded in the data.
-#'
-#' @param numMix Number of mixtures predetermined by user.
-#'
-#' @param numYears Number of Years collected.
-#'
-#' @param numDays Number of Days per Year.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the initial probabilities each state.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the transition probabilities from state to state.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the mixture probabilities at each location.
-#'
-#' @param gamma_shape The Current matrix for the Shape Parameters.
-#'
-#' The current matrix of the shape hyperparameters for each Gamma mixture component.
-#'
-#' @param gamma_rate The Current Matrix for the Rate Parameters.
-#'
-#' The current matrix of the rate hyperparameters for each Gamma mixture component.
-#'
-#' @param q_1j Expectation of latent variable s_1j.
-#'
-#' The latent variable s_tj represents if, at time t, the state is j.
-#'  s_1j is the initial states.
-#'
-#' @param q_tj Expectation of latent variable s_tj.
-#'
-#' The latent variable s_tj represents if, at time t, the state is j.
-#'
-#' @param q_tjml Expectation of latent variable r_tjml.
-#'
-#' The latent variable r_tjml represents an indicator variable with 1 if y_tl (the data point at time t and location l)
-#'  comes from mixture m, and s_t = j.
-#'
-#' @param q_jk Expectation of state transistions
-#'
-#' The latent variables s_tj*s_t+1,k represent the movement from state j to k from time t to t+1.
-#'
-#' @param obs The dataset.
-#'
-#' @param iter The current step of the iteration process.
-#'
-#' @param priors A list containing the priors used at the start of the process.
-#'
-#' The priors are needed for xi, alpha, zeta, gamma_shape, and gamma_rate.
-#'
-#' @export
-#'
-#' @return A list of objects:
-#'
-#'  * `gamma_jml`: Posterior shape of exponential rate.
-#'  * `delta_jml`: Posterior rate of exponential rate.
-#'  * `xi_j`: Posterior Dirichlet paramters for initial distribution.
-#'  * `alpha_j`: Posterior Dirichlet parameters for transition matrix rows.
-#'  * `zeta_jl`: Posterior Dirichlet parameters for mixing probabilities.
-#'  * `h_jml`: A matrix of coefficients for normalizing the mixture distributions.
-#'
-#' @details
-#'
-#' Stochastic VI assumes exchangeablility for the emission distributions used for each year. Thus
-#'  rather than trying to compute N data points, we split the data with N = D*Y, days and years, then account for the number of years
-#'  by multiplying parts of the update by Y. However, the user must decide some step size tau. The step size must
-#'  fulfill the Robbins-Monro conditions.
-#'
-#'  In particular, this function uses stochastic gradient ascent with step size tau = 1/iter.
-#'
-
 VBMS.exp = function(numStates, numLoc, numMix, numYears, numDays, xi, alpha, zeta, gamma_shape, gamma_rate, q_1j, q_tj, q_tjml, q_jk, obs, iter, priors){
   #Q's will be randomized already, so no need to edit the sums, just multiply by N
   N = numYears
   step = 1/iter
-  gamma_jml    <- gamma_shape # posterior shape of exponential rate
-  delta_jml    <- gamma_rate # posterior rate of exponential rate
-  zeta_jl      <- zeta # posterior Dirichlet parameters for mixing probabilities
-  alpha_j      <- alpha # posterior Dirichlet parameters for transition matrix rows
-  xi_j         <- xi # posterior Dirichlet parameters for initial distribution
-  gamma_prior      <- priors$gamma_shape_prior
-  delta_prior      <- priors$gamma_rate_prior
-  xi_prior         <- priors$xi_prior
-  alpha_prior      <- priors$alpha_prior
-  zeta_prior      <- priors$zeta_prior
+  gamma_jml    <- gamma_shape[[iter]] # posterior shape of exponential rate
+  delta_jml    <- gamma_rate[[iter]] # posterior rate of exponential rate
+  zeta_jl      <- zeta[[iter]] # posterior Dirichlet parameters for mixing probabilities
+  alpha_j      <- alpha[[iter]] # posterior Dirichlet parameters for transition matrix rows
+  xi_j         <- xi[[iter]] # posterior Dirichlet parameters for initial distribution
+  gamma_prior      <- gamma_shape[[iter - 1]]
+  delta_prior      <- gamma_rate[[iter - 1]]
+  xi_prior         <- xi[[iter - 1]]
+  alpha_prior      <- alpha[[iter - 1]]
+  zeta_prior      <- xi[[iter - 1]]
   #### Update hyperparameters
   for(j in 1:numStates){
     xi_j[j] <- (1 - step)*xi_j[j] + (step)*(xi_prior[j] + sum(q_1j[j]))

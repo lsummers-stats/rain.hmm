@@ -1,47 +1,3 @@
-#' ELBO Exponential Function
-#'
-#' @description
-#' A function designed to calculate an approximation of the ELBO when using an exponential function to predict rainfall.
-#'
-#' @details
-#' Since the ELBO is computationally difficult, or sometimes impossible, the function was designed to approximated it.
-#' This function is used within the Variational Bayes EM loop to check for improvements.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numMix Number of Mixtures laid out in the model.
-#'
-#' @param numLoc Number of locations collected in the data.
-#'
-#' @param stateProb Matrix of stationary probabilities.
-#'
-#' @param mixProb Matrix of values used to weight the mixtures.
-#'
-#' @param initProb Matrix of Initial Values for each state.
-#'
-#' @param jtTransMat Transition Probability Matrix.
-#'
-#' @param ct A matrix of values used to normalize the forward variables.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' @param gamma_shape The Current matrix for the Shape Parameters
-#'
-#' @param gamma_rate The Current Matrix for the Rate Parameters
-#'
-#' @param obs The vector of observations.
-#'
-#' @param h A matrix of values used in calculating the ELBO.
-#'
-#' @return A single value representing the ELBO for the given model parameters.
-#'
-#' @export
-
-
 ELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_shape, gamma_rate, obs, h){
   kl_C <- 0
   kl_A <- 0
@@ -67,47 +23,6 @@ ELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTrans
   elboresult <- - sum(log(ct)) - kl_theta - kl_A  - kl_C  - kl_pi
 }
 
-#' DIC Function
-#'
-#' @description
-#' A function designed to calculate an approximation of the DIC.
-#'
-#' @details
-#' Since the DIC is computationally difficult, or sometimes impossible, the function was designed to approximated it.
-#' This function is used within the Variational Bayes EM loop to check for improvements.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numMix Number of Mixtures laid out in the model.
-#'
-#' @param numLoc Number of locations collected in the data.
-#'
-#' @param stateProb Matrix of stationary probabilities.
-#'
-#' @param mixProb Matrix of values used to weight the mixtures.
-#'
-#' @param initProb Matrix of Initial Values for each state.
-#'
-#' @param jtTransMat Transition Probability Matrix.
-#'
-#' @param ct A matrix of values used to normalize the forward variables.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' @param gamma_shape The Current matrix for the Shape Parameters
-#'
-#' @param gamma_rate The Current Matrix for the Rate Parameters
-#'
-#' @return A list of two objects:
-#' *`DIC`: A single value representing the DIC for the given model parameters.
-#' *`pd`: A value used in calculating the DIC.
-#'
-#' @export
-
 DIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_shape, gamma_rate){
   pd0 <- 0
   pd1 <- 0
@@ -131,49 +46,6 @@ DIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTrans
   dic <- 4*(pd)  + 2*sum(log(ct))
   result = list('pd' = pd, 'dic' = dic)
 }
-
-#' Stochastic ELBO Function
-#'
-#' @description
-#' A function designed to calculate an approximation of the ELBO.
-#'
-#' @details
-#' Since the ELBO is computationally difficult, or sometimes impossible, the function was designed to approximated it.
-#' This function is used within the Variational Bayes EM loop to check for improvements, with SVI in mind.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numMix Number of Mixtures laid out in the model.
-#'
-#' @param numLoc Number of locations collected in the data.
-#'
-#' @param stateProb Matrix of stationary probabilities.
-#'
-#' @param mixProb Matrix of values used to weight the mixtures.
-#'
-#' @param initProb Matrix of Initial Values for each state.
-#'
-#' @param jtTransMat Transition Probability Matrix.
-#'
-#' @param ct A matrix of values used to normalize the forward variables.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' @param gamma_shape The Current matrix for the Shape Parameters
-#'
-#' @param gamma_rate The Current Matrix for the Rate Parameters
-#'
-#' @param obs The vector of observations.
-#'
-#' @param h A matrix of values used in calculating the ELBO.
-#'
-#' @return A single value representing the ELBO for the given model parameters.
-#'
-#' @export
 
 StoELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_shape, gamma_rate, obs, h){
   kl_C <- 0
@@ -199,46 +71,6 @@ StoELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTr
 }
 
 
-#' DIC Function
-#'
-#' @description
-#' A function designed to calculate an approximation of the DIC.
-#'
-#' @details
-#' Since the DIC is computationally difficult, or sometimes impossible, the function was designed to approximated it.
-#' This function is used within the Variational Bayes EM loop to check for improvements, with SVI in mind.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numMix Number of Mixtures laid out in the model.
-#'
-#' @param numLoc Number of locations collected in the data.
-#'
-#' @param stateProb Matrix of stationary probabilities.
-#'
-#' @param mixProb Matrix of values used to weight the mixtures.
-#'
-#' @param initProb Matrix of Initial Values for each state.
-#'
-#' @param jtTransMat Transition Probability Matrix.
-#'
-#' @param ct A matrix of values used to normalize the forward variables.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' @param gamma_shape The Current matrix for the Shape Parameters
-#'
-#' @param gamma_rate The Current Matrix for the Rate Parameters
-#'
-#' @return A list of two objects:
-#' *`DIC`: A single value representing the DIC for the given model parameters.
-#' *`pd`: A value used in calculating the DIC.
-#'
-#' @export
 StoDIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_shape, gamma_rate){
   pd0 <- 0
   pd1 <- 0
@@ -261,71 +93,6 @@ StoDIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTr
   dic <- 4*(pd)  + 2*sum(log(ct))
   result = list('pd' = pd, 'dic' = dic)
 }
-
-#' ELBO Gamma Function
-#'
-#' @description
-#' A function designed to calculate an approximation of the ELBO when using a gamma function to describe rainfall.
-#'
-#' @details
-#' Since the ELBO is computationally difficult, or sometimes impossible, the function was designed to approximated it.
-#' This function is used within the Variational Bayes EM loop to check for improvements.
-#'
-#' @param numStates Number of States laid out in the model.
-#'
-#' @param numMix Number of Mixtures laid out in the model.
-#'
-#' @param numLoc Number of locations collected in the data.
-#'
-#' @param stateProb Matrix of stationary probabilities.
-#'
-#' @param mixProb Matrix of values used to weight the mixtures.
-#'
-#' @param initProb Matrix of Initial Values for each state.
-#'
-#' @param jtTransMat Transition Probability Matrix.
-#'
-#' @param ct A matrix of values used to normalize the forward variables.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' @param gamma_hyper Value of the gamma hyperparameter of the GC2 distribution.
-#'
-#' @param delta_hyper Value of the delta hyperparameter of the GC2 distribution.
-#'
-#' @param theta_hyper Value of the theta hyperparameter of the GC2 distribution.
-#'
-#' @param logbetaprior Value of the log of beta hyperparameter of the GC2 distribution before updating.
-#'
-#' @param logbetapost Value of the log of beta hyperparameter of the GC2 distribution before after.
-#'
-#' @param exp_omega A matrix of the expectation of the shape parameter.
-#'
-#'  The commands `omega_constant` and `exp_omega` can be used to calculate these values.
-#'
-#' @param exp_psi_omega A matrix of the expectation a special expectation of the shape parameter.
-#'
-#'  The commands`omega_constant` and `exp_psi_omega` can be used to calculate these values.
-#'
-#' @param exp_lomega A matrix of the expectation of the log-gamma of the shape parameter.
-#'
-#'  The commands `omega_constant` and `exp_l_omega` can be used to calculate these values.
-#'
-#' @param obs The vector of observations.
-#'
-#' @param h A matrix of values used in calculating the ELBO.
-#'
-#'  This value can be found as an output from the maximization in the EM algorithm (`VBM.gam`), or calculated manually
-#'  as it is the gamma_hyper*log(delta_hyper) minus the log-gamma(gamma_hyper).
-#'
-#' @return A single value representing the ELBO for the given model parameters.
-#'
-#'
-#' @export
 
 ELBO.gam = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_hyper, delta_hyper, theta_hyper, logbetaprior, logbetapost, exp_omega, exp_psi_omega, exp_lomega, obs, h){
   kl_C <- 0

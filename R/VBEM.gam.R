@@ -1,58 +1,3 @@
-#' Variational Bayes EM Algorithm for Gamma Rainfall
-#'
-#' @description
-#' A function dedicated to running the Variational Bayes EM algorithm.
-#'
-#' @details
-#' Used to run the Variational Bayes EM Process for a Hidden Markov Model designed
-#'  for rain data. It is assumed the rainfall is calculated using a Gamma Distribution.
-#'
-#' @param D Number of Days per Year.
-#'
-#' @param S Number of States laid out in the model.
-#'
-#' @param Y Number of Years collected.
-#'
-#' @param L Number of locations data recorded in the data.
-#'
-#' @param M Number of mixtures predetermined by user.
-#'
-#' The initial number of mixtures is set to two, one for the zero rainfall cluster, the other
-#' for the gamma distribution. Increasing the number of mixtures leads to instability.
-#'
-#' @param xi The Current Matrix for the Initial States.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the initial probabilities each state.
-#'
-#' @param alpha The Current Matrix for the Transitions.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the transition probabilities from state to state.
-#'
-#' @param zeta The Current Matrix for the Mixtures.
-#'
-#' The current matrix of the hyperparameters for the Dirichlet distribution used to describe
-#'  the mixture probabilities at each location.
-#'
-#' @param gammah The Current matrix for the gamma hyperparameters of the GC2 distribution.
-#'
-#' @param deltah The Current Matrix for the delta hyperparameters of the GC2 distribution.
-#'
-#' @param logbetah The Current Matrix for the log of the beta hyperparameters of the GC2 distribution.
-#'
-#' @param deltah The Current Matrix for the delta hyperparameters of the GC2 distribution.
-#'
-#' @param obs The vector of observations.
-#'
-#'  The vector containing the y-values (typically the precipitation amounts) from the data.
-#'
-#' @param maxiter The maximum number of iterations the algorithm will do before stopping.
-#'
-#'  The algorithm will stop earlier than this number if the amount of improvement is smaller than a tolerance
-#'  of 10^-9. The default value is 1000.
-#'
-#'  @export
 VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, logbetah, obs, maxiter) {
   elbo      <- rep(0,maxiter)
   elbo_old  <- -50000
@@ -97,6 +42,13 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
       }
     }
   }
+  xi.list    <- list('prior' = xi)
+  alpha.list   <- list('prior' = alpha)
+  gamma.list   <- list('prior' = gammah)
+  delta.list   <- list('prior' = deltah)
+  theta.list   <- list('prior' = thetah)
+  logbeta.list   <- list('prior' = logbetah)
+  mix.list   <- list('prior' = zeta)
 
   emptyfillers <- list('del' = del_y0, 'a_jk' = a_jk, 'b_tj' = b_tj, 'b_tjl' = b_tjl, 'a_1j' = a_1j, 'ct' = ct, 'fvar' = fvar, 'bvar' = bvar, 'b_star' = b_star, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk, 'q_1j' = q_1j)
   #Model Running
@@ -112,6 +64,7 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
     gammah <- VBMout$gamma_jml
     deltah <- VBMout$delta_jml
     thetah <- VBMout$theta_jml
+    logbetah <- VBMout$log_beta_jml
     for(j in 1:S){
       for(l in 1:L){
         for(m in 2:M){
@@ -122,6 +75,20 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
         }
       }
     }
+    emptyfillers$a_jk <- VBE_out$a_jk
+    emptyfillers$b_tj <- VBE_out$b_tj
+    emptyfillers$b_tjl <- VBE_out$b_tjl
+    emptyfillers$q_tj <- VBE_out$q_tj
+    emptyfillers$q_tjml <- VBE_out$q_tjml
+    emptyfillers$q_jk <- VBE_out$q_jk
+    emptyfillers$q_1j <- VBE_out$q_1j
+    xi.list[[iter]]    <- xi
+    alpha.list[[iter]]    <- alpha
+    gamma.list[[iter]]    <- gammah
+    delta.list[[iter]]    <- deltah
+    theta.list[[iter]]    <- thetah
+    logbeta.list[[iter]]    <- logbetah
+    mix.list[[iter]]    <- zeta
     #ELBO
     elboresult <- ELBO.gam(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_hyper = VBMout$gamma_jml, delta_hyper = VBMout$delta_jml, theta_hyper = VBMout$theta_jml, logbetaprior = logbetah, logbetapost = VBMout$log_beta_jml, exp_omega = omega_exp, exp_psi_omega = omega_psi, exp_lomega = omega_lgamma, obs, h = VBMout$h_jml)
     logbetah <- VBMout$log_beta_jml
@@ -135,5 +102,22 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
     omega.post[,,l] <- omega.post[,,l] + params$Rainfall_shape}
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
+  xi.track <- array(0, dim = c(iter, S))
+  alpha.track <- array(0, dim = c(S,S,iter))
+  mix.track <- array(0, dim = c(S,M,L,iter))
+  gamma.track <- array(0, dim = c(S,M - 1,L, iter))
+  delta.track <- array(0, dim = c(S,M - 1,L, iter))
+  theta.track <- array(0, dim = c(S,M - 1,L, iter))
+  logbeta.track <- array(0, dim = c(S,M - 1,L, iter))
+  for(i in 1:iter){
+    xi.track[i,] <- xi.list[[i]]
+    alpha.track[,,i] <- alpha.list[[i]]
+    mix.track[,,,i] <- mix.list[[i]]
+    gamma.track[,,,i] <- gamma.list[[i]]
+    delta.track[,,,i] <- delta.list[[i]]
+    theta.track[,,,i] <- theta.list[[i]]
+    logbeta.track[,,,i] <- logbeta.list[[i]]
+  }
+  param.tracker = list('xi' = xi.track, 'alpha' = alpha.track, 'zeta' = mix.track, 'gamma' = gamma.track, 'delta' = delta.track, 'theta'= theta.track, 'logbeta'= logbeta.track)
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_hyper' = gammah, 'delta_hyper' = deltah, 'theta_hyper' = thetah, 'beta_hyper' = logbetah, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post, 'omega' = omega.post)
-  output = list('posteriors' = posteriors, 'ELBO' = elbo)}
+  output = list('posteriors' = posteriors, 'ELBO' = elbo, 'iternum' = iter, 'param.tracker' = param.tracker)}
