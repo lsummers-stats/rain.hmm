@@ -71,11 +71,11 @@ StoVBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, 
     #ELBO
     elboresult <- StoELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha_j, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, obs = y_sample$data, h = VBMout$h_jml)
     elbo[iter] <- elboresult
-    elbo_old <- elbo[iter-1]
+    if(iter > 1){elbo_old <- elbo[iter-1]}
     #DIC
     DICout <- StoDIC(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml)
     dic[iter] <- DICout$dic
-    dic_old <- dic[iter-1]
+    if(iter > 1){dic_old <- dic[iter-1]}
     improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
     improvement_dic <- (dic_old-dic[iter])/dic_old
     }

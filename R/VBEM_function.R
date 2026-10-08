@@ -1,10 +1,8 @@
 VBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs, maxiter = 1000) {
   dic       <- rep(0,maxiter)
   dic_old   <- 50000
-  dic[1]    <- 25000
   elbo      <- rep(0,maxiter)
   elbo_old  <- -50000
-  elbo[1]   <- -25000
   tol       <- 10^(-9)
   iter      <- 1
   improvement_dic   <- (dic_old-dic[1])/dic_old
@@ -65,11 +63,11 @@ VBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs
     #ELBO
     elboresult <- ELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha_j, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, obs, h = VBMout$h_jml)
     elbo[iter] <- elboresult
-    elbo_old <- elbo[iter-1]
+    if(iter > 1){elbo_old <- elbo[iter-1]}
     #DIC
     DICout <- DIC(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml)
     dic[iter] <- DICout$dic
-    dic_old <- dic[iter-1]
+    if(iter > 1){dic_old <- dic[iter-1]}
     improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
     improvement_dic <- (dic_old-dic[iter])/dic_old
     }
