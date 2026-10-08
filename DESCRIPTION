@@ -1,6 +1,6 @@
 Package: rain.hmm
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Creates Stochastic Precipitation Models using Hidden Markov Models and Variational Bayes.
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -9,11 +9,9 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Users can generate hidden markov models, estimate parameters using VB and create synthetic data.
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 Imports:  Rmpfr
 Config/roxygen2/version: 8.1.0
 Roxygen: list(markdown = TRUE)
