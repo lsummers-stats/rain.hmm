@@ -76,8 +76,8 @@ StoVBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, 
     DICout <- StoDIC(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml)
     dic[iter] <- DICout$dic
     if(iter > 1){dic_old <- dic[iter-1]}
-    improvement_elbo <- (elbo_old-elbo[iter])/elbo_old
-    improvement_dic <- (dic_old-dic[iter])/dic_old
+    improvement_elbo <- (elboresult - elbo_old)/elbo_old
+    improvement_dic <- (DICout$dic - dic_old)/dic_old
     }
   for(l in 1:L){
     params <- post_param(numStates = S,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)

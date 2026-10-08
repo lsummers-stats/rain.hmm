@@ -68,5 +68,10 @@ VBEmpfr.exp = function(numDays, numStates, numLoc, numMix, xi, alpha, zeta, gamm
     fix = which(logct < 0)
     logct[fix] = exp(-700)
   }
+  q_tjml[is.na(q_tjml)] <- 0
+  q_tj[is.na(q_tj)] <- 0
+  q_jk[is.na(q_jk)] <- 0
+  q_1j[is.na(q_1j)] <- 0
+  a_1j[is.na(a_1j)] <- 0
   output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'ct' = logct, 'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
 }

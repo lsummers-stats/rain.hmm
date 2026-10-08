@@ -1,4 +1,4 @@
-VBM.exp = function(numStates, numLoc, numMix, xi, alpha, zeta, gamma_shape, gamma_rate, q_1j, q_tj, q_tjml, q_jk, obs, iter){
+VBM.exp = function(numStates, numLoc, numMix, xi, alpha, zeta, gamma_shape, gamma_rate, q_1j, q_tj, q_tjml, q_jk, obs){
   gamma_jml    <- gamma_shape # posterior shape of exponential rate
   delta_jml    <- gamma_rate # posterior rate of exponential rate
   zeta_jl      <- zeta # posterior Dirichlet parameters for mixing probabilities

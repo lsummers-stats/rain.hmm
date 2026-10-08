@@ -94,7 +94,7 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
     logbetah <- VBMout$log_beta_jml
     elbo[iter] <- elboresult
     if(iter > 1){elbo_old <- elbo[iter-1]}
-    improvement_elbo <- (elbo_old-elbo[iter])/elbo_old}
+    improvement_elbo <- (elboresult - elbo_old)/elbo_old}
   for(l in 1:L){
     params <- post_param.gam(numStates = K,numMix = M, gamma.post = VBMout$gamma_jml[,,l], delta.post = VBMout$delta_jml[,,l], theta.post = VBMout$theta_jml[,,l], exp_alpha = omega_exp[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
     zeta.post[,,l]   <- zeta.post[,,l] + params$MixProb

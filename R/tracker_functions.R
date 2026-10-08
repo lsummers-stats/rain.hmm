@@ -20,7 +20,10 @@ ELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTrans
   }
   kl_pi <-  sum(apply(initProb, 2, sum)*(digamma(xi) - digamma(sum(xi)))) +
     lgamma(sum(xi)) - sum(lgamma(xi)) #- lgamma(sum(pi_0)) + sum(lgamma(pi_0))
-  elboresult <- - sum(log(ct)) - kl_theta - kl_A  - kl_C  - kl_pi
+  log_ct <- log(ct)
+  log_ct[log_ct == -Inf] <- 0
+  log_ct[log_ct == Inf] <- 0
+  elboresult <- sum(log_ct) - kl_theta - kl_A  - kl_C  - kl_pi
 }
 
 DIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTransMat, ct, xi, alpha, zeta, gamma_shape, gamma_rate){
@@ -43,7 +46,10 @@ DIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTrans
   }
   pd3 <- sum(initProb*(log(xi) - log(sum(xi)) - digamma(xi) + digamma(sum(xi))))
   pd <- pd0+sum(pd1)+pd2+pd3
-  dic <- 4*(pd)  + 2*sum(log(ct))
+  log_ct <- log(ct)
+  log_ct[log_ct == -Inf] <- 0
+  log_ct[log_ct == Inf] <- 0
+  dic <- 4*(pd)  + 2*sum(log_ct)
   result = list('pd' = pd, 'dic' = dic)
 }
 
@@ -67,7 +73,10 @@ StoELBO = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTr
   }
   kl_pi <-  sum(apply(initProb, 2, sum)*(digamma(xi) - digamma(sum(xi)))) +
     lgamma(sum(xi)) - sum(lgamma(xi))
-  elboresult <- - sum(log(ct)) - kl_theta - kl_A  - kl_C  - kl_pi
+  log_ct <- log(ct)
+  log_ct[log_ct == -Inf] <- 0
+  log_ct[log_ct == Inf] <- 0
+  elboresult <- sum(log_ct) - kl_theta - kl_A  - kl_C  - kl_pi
 }
 
 
@@ -90,7 +99,10 @@ StoDIC <- function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtTr
   }
   pd3 <- sum(initProb*(log(xi) - log(sum(xi)) - digamma(xi) + digamma(sum(xi))))
   pd <- pd0+sum(pd1)+pd2+pd3
-  dic <- 4*(pd)  + 2*sum(log(ct))
+  log_ct <- log(ct)
+  log_ct[log_ct == -Inf] <- 0
+  log_ct[log_ct == Inf] <- 0
+  dic <- 4*(pd)  + 2*sum(log_ct)
   result = list('pd' = pd, 'dic' = dic)
 }
 
@@ -121,4 +133,7 @@ ELBO.gam = function(numStates, numMix, numLoc, stateProb, mixProb, initProb, jtT
   }
   kl_pi <-  sum(apply(initProb, 2, sum)*(digamma(xi) - digamma(sum(xi)))) +
     lgamma(sum(xi)) - sum(lgamma(xi))
-  elboresult <- - sum(log(ct)) - kl_theta - kl_A  - kl_C  - kl_pi}
+  log_ct <- log(ct)
+  log_ct[log_ct == -Inf] <- 0
+  log_ct[log_ct == Inf] <- 0
+  elboresult <- sum(log_ct) - kl_theta - kl_A  - kl_C  - kl_pi}

@@ -63,9 +63,13 @@ forward_recursion <- function(numObs, numStates, initDist = c(1,rep(0,K-1)), a =
       fvar_star[t,j] <- sum(fvar_tilde[t-1,]*a[,j])*b[t,j]
       #print(t)
     }
-    ct[t] <- 1/sum(fvar_star[t,])
+    sumf = sum(fvar_star[t,])
+    sumf[is.na(sumf)] <- 0
+    ct[t] <- 1/sumf
     fvar_tilde[t,] <- fvar_star[t,]*ct[t]
   }
+  ct[is.na(ct)] <- 0
+  fvar_tilde[is.na(fvar_tilde)] <- 0
   Forward <- list(fvar_tilde, ct)
   return(Forward)
 }
@@ -176,10 +180,13 @@ forward_recursion_mpfr <- function(numObs, numStates, initDist = c(1,rep(0,K-1))
     for(j in 1:numStates){
       fvar_star[t,j] <- sum(fvar_tilde[t-1,]*a[,j])*b[t,j]
     }
-    ct[t] <- 1/sum(fvar_star[t,])
+    sumf = sum(fvar_star[t,])
+    sumf[is.na(sumf)] <- 0
+    ct[t] <- 1/sumf
     fvar_tilde[t,] <- as.double(fvar_star[t,]*ct[t])
   }
   logct <- as.double(log(ct))
+  fvar_tilde[is.na(fvar_tilde)] <- 0
   Forward <- list(fvar_tilde, logct)
   return(Forward)
 }

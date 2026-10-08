@@ -68,5 +68,10 @@ VBE.exp <- function(numDays, numStates, numYears, numLoc, numMix, xi, alpha, zet
         q_tjml[,j,-1,n,l] <- b_star[,j,-1]/sum_b
         q_tjml[,j,1,n,l] <- b_star[,j,1]
       }
+  q_tjml[is.na(q_tjml)] <- 0
+  q_tj[is.na(q_tj)] <- 0
+  q_jk[is.na(q_jk)] <- 0
+  q_1j[is.na(q_1j)] <- 0
+  a_1j[is.na(a_1j)] <- 0
   output = list('a_jk' = a_jk, 'b_tj' = b_tj, 'b_tjl' = b_tjl, 'ct' = ct,'q_1j' = q_1j, 'q_tj' = q_tj, 'q_tjml' = q_tjml, 'q_jk' = q_jk)
 }
