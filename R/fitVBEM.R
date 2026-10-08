@@ -1,4 +1,5 @@
 #' Variational Bayes EM Algorithm for Rainfall
+#'
 #' @description
 #'  A function dedicated to running the Variational Bayes EM algorithm with several different types of models.
 #'
