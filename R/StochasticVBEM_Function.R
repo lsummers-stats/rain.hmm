@@ -69,7 +69,7 @@ StoVBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, 
     rate.list[[iter]]   <- gamma_rate
     mix.list[[iter]]   <- zeta
     #ELBO
-    elboresult <- StoELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, obs = y_sample$data, h = VBMout$h_jml)
+    elboresult <- StoELBO(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = numericmix, initProb = VBEout$q_1j, jtTransMat = numerictrans, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha_j, zeta = VBMout$zeta_jl, gamma_shape = VBMout$gamma_jml, gamma_rate = VBMout$delta_jml, obs = y_sample$data, h = VBMout$h_jml)
     elbo[iter] <- elboresult
     elbo_old <- elbo[iter-1]
     #DIC

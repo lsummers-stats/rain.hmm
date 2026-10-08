@@ -90,7 +90,7 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
     logbeta.list[[iter]]    <- logbetah
     mix.list[[iter]]    <- zeta
     #ELBO
-    elboresult <- ELBO.gam(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha, zeta = VBMout$zeta_jl, gamma_hyper = VBMout$gamma_jml, delta_hyper = VBMout$delta_jml, theta_hyper = VBMout$theta_jml, logbetaprior = logbetah, logbetapost = VBMout$log_beta_jml, exp_omega = omega_exp, exp_psi_omega = omega_psi, exp_lomega = omega_lgamma, obs, h = VBMout$h_jml)
+    elboresult <- ELBO.gam(numStates = S, numMix = M, numLoc = L, stateProb = VBEout$q_tj, mixProb = VBEout$q_tjml, initProb = VBEout$q_1j, jtTransMat = VBEout$q_jk, ct = VBEout$ct, xi = VBMout$xi_j, alpha = VBMout$alpha_j, zeta = VBMout$zeta_jl, gamma_hyper = VBMout$gamma_jml, delta_hyper = VBMout$delta_jml, theta_hyper = VBMout$theta_jml, logbetaprior = logbetah, logbetapost = VBMout$log_beta_jml, exp_omega = omega_exp, exp_psi_omega = omega_psi, exp_lomega = omega_lgamma, obs, h = VBMout$h_jml)
     logbetah <- VBMout$log_beta_jml
     elbo[iter] <- elboresult
     elbo_old <- elbo[iter-1]
