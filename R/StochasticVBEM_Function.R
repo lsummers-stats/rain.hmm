@@ -54,15 +54,15 @@ StoVBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, 
     zeta <- VBMout$zeta_jl
     gamma_shape <- VBMout$gamma_jml
     gamma_rate <- VBMout$delta_jml
-    numericmix <- array(as.numeric(VBEout$q_tjml),dim(VBEout$q_tjml))
-    numerictrans <- array(as.numeric(VBEout$q_jk),dim(VBEout$q_jk))
-    emptyfillers$a_jk <- array(as.numeric(VBE_out$a_jk), dim(VBE_out$a_jk))
-    emptyfillers$b_tj <- array(as.numeric(VBE_out$b_tj), dim(VBE_out$b_tj))
-    emptyfillers$b_tjl <- array(as.numeric(VBE_out$b_tjl), dim(VBE_out$b_tjl))
-    emptyfillers$q_tj <- array(as.numeric(VBE_out$q_tj), dim(VBE_out$q_tj))
-    emptyfillers$q_tjml <- array(as.numeric(VBE_out$q_tjml), dim(VBE_out$q_tjml))
-    emptyfillers$q_jk <- array(as.numeric(VBE_out$q_jk), dim(VBE_out$q_jk))
-    emptyfillers$q_1j <- array(as.numeric(VBE_out$q_1j), dim(VBE_out$q_1j))
+    numericmix <- VBEout$q_tjml
+    numerictrans <- VBEout$q_jk
+    emptyfillers$a_jk <- VBEout$a_jk
+    emptyfillers$b_tj <- VBEout$b_tj
+    emptyfillers$b_tjl <- VBEout$b_tjl
+    emptyfillers$q_tj <- VBEout$q_tj
+    emptyfillers$q_tjml <- VBEout$q_tjml
+    emptyfillers$q_jk <- VBEout$q_jk
+    emptyfillers$q_1j <- VBEout$q_1j
     xi.list[[iter]]    <- xi
     alpha.list[[iter]]  <- alpha
     shape.list[[iter]]   <- gamma_shape

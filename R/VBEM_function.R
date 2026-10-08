@@ -50,13 +50,13 @@ VBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs
     gamma_shape <- VBMout$gamma_jml
     gamma_rate <- VBMout$delta_jml
     ##Update all necessary parts
-    emptyfillers$a_jk <- VBE_out$a_jk
-    emptyfillers$b_tj <- VBE_out$b_tj
-    emptyfillers$b_tjl <- VBE_out$b_tjl
-    emptyfillers$q_tj <- VBE_out$q_tj
-    emptyfillers$q_tjml <- VBE_out$q_tjml
-    emptyfillers$q_jk <- VBE_out$q_jk
-    emptyfillers$q_1j <- VBE_out$q_1j
+    emptyfillers$a_jk <- VBEout$a_jk
+    emptyfillers$b_tj <- VBEout$b_tj
+    emptyfillers$b_tjl <- VBEout$b_tjl
+    emptyfillers$q_tj <- VBEout$q_tj
+    emptyfillers$q_tjml <- VBEout$q_tjml
+    emptyfillers$q_jk <- VBEout$q_jk
+    emptyfillers$q_1j <- VBEout$q_1j
     xi.list[[iter]]    <- xi
     alpha.list[[iter]]  <- alpha
     shape.list[[iter]]   <- gamma_shape
