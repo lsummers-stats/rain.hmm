@@ -54,21 +54,19 @@ fit.VBEM <- function(data, L, S, M = 2, D, Y = 1, dist = c("exp", "gamma", "stoc
 
   dist <- match.arg(dist)
 
-  if(dist == 'exp'){
-    VBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
-          gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter)
-  }
-  if(dist == 'stoch.exp'){
-    StoVBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
-         gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter, mix.samples = F)
-  }
+  switch(dist,
+         exp = VBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
+        gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter),
+         stoch.exp = StoVBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
+        gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter, mix.samples = F),
+         gamma = VBEM.gam(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
+        gammah = hypers$gamma, deltah= hypers$delta, thetah = hypers$theta, logbetah= hypers$logbeta,
+                          obs = data, maxiter = maxiter))
   if(dist == 'gamma' & M > 2){
     print("The code for multiple gamma mixtures is unstable, and will likely result in errors. Please keep M = 2 for now.")
   }
   if(dist == 'gamma'){
-    VBEM.gam(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
-             gammah = hypers$gamma, deltah= hypers$delta, thetah = hypers$theta, logbetah= hypers$logbeta,
-             obs = data, maxiter = maxiter)
+
   }
   print("please select a model type: exp for exponential, stoch.exp for stochastic exponential or gamma for gamma")
 }
