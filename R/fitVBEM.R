@@ -54,18 +54,18 @@ fit.VBEM <- function(data, L, S, M = 2, D, Y = 1, dist = c("exp", "gamma", "stoc
 
   dist <- match.arg(dist)
 
-  if(dist == "exp"){
+  if(dist == 'exp'){
     VBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
           gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter)
   }
-  if(dist == "stoch.exp"){
+  if(dist == 'stoch.exp'){
     StoVBEM.exp(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
          gamma_shape = hypers$gamma_shape, gamma_rate = hypers$gamma_rate, obs = data, maxiter = maxiter, mix.samples = F)
   }
-  if(dist == "gamma" & M > 2){
+  if(dist == 'gamma' & M > 2){
     print("The code for multiple gamma mixtures is unstable, and will likely result in errors. Please keep M = 2 for now.")
   }
-  if(dist == "gamma"){
+  if(dist == 'gamma'){
     VBEM.gam(D = D, S = S, Y = Y, L = L, M = M, xi = hypers$xi, alpha = hypers$alpha, zeta = hypers$zeta,
              gammah = hypers$gamma, deltah= hypers$delta, thetah = hypers$theta, logbetah= hypers$logbeta,
              obs = data, maxiter = maxiter)
