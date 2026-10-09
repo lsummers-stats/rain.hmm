@@ -1,4 +1,4 @@
-HMMVI: Hidden Markov Models with Variational Bayes
+rain.hmm: Hidden Markov Models with Variational Bayes
 ================
 
 This package is designed…
@@ -13,17 +13,24 @@ library(rain.hmm)
 #Pulling the simplified Chesapeake Bay dataset included within the package as a tester.
 
 set.seed(1)
-raindata <- data(cbayrain)[-1]
+data <- cbayrain[,-1]
+data <- data[,1:10]
 
-#the [-1] removes the dates column.
+raindata <- array(NA, dim = c(1840, 1, 10))
+
+for(i in 1:10){
+  raindata[,,i] <- data[,i]
+}
+
+#the [-1] removes the dates column. Shrinking to 10 locations for ease of showcase.
 
 #The VBEM function requires you to start with some potential priors, as well as pre-pick the number of days, years, mixtures, and number of locations you collected data from.
 
-##Assuming 3 states, 3 mixtures and 3 locations, with 1840 days of data collected and not split into years
+##Assuming 3 states, 3 mixtures and 10 locations, with 1840 days of data collected and not split into years
 
 S = 3
 M = 3
-L = 3
+L = 10
 
 ##Initial estimates of the hyperparameters:
 gamma_0     <- matrix(data = c(.5,2,1.5,9,2,16),nrow = S,ncol = M-1,byrow = T) # shape of exponential rate
@@ -35,36 +42,33 @@ zeta_0      <- array(zeta_0,dim = c(S,M,L))
 alpha_0     <- matrix(rep(10,S^2),nrow = S,byrow = T)/S # Dirichlet prior for transition matrix rows
 xi_0        <- rep(1,S)/S # Dirichlet prior for initial probabilities
 
-param <- list('gamma' = gamma_0, 'delta' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
+param <- list('gamma_shape' = gamma_0, 'gamma_rate' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
 
-Model <- fit.VBEM(D = 1840, S = S, Y = 1, L = 3, M = 3, hypers = param, data = y)
+Model <- fit.VBEM(D = 1840, S = 3, Y = 1, L = 3, M = 3, hypers = param, dist = "exp", data = raindata)
 ```
 
-The output is a list, containing information such as the posterior updates, the ELBO, and the number of iterations.
+The output is a list, containing information such as the posterior
+hyperparameters, or the ELBO/DIC.
 
 ``` r
 print(Model$posteriors$pi)
 ```
 
-    ## [1] 0.0006409779 0.0032459527 0.9961130694
+    ## [1] 0.96825397 0.01587302 0.01587302
 
 ``` r
 Model$posteriors$transmat
 ```
 
     ##           [,1]      [,2]      [,3]
-    ## [1,] 0.6383142 0.2254607 0.1362250
-    ## [2,] 0.1998351 0.3932420 0.4069229
-    ## [3,] 0.2188876 0.3725002 0.4086122
+    ## [1,] 0.5366477 0.2454693 0.2178831
+    ## [2,] 0.3704684 0.2738716 0.3556600
+    ## [3,] 0.1884400 0.2390348 0.5725252
 
 ## Post-Formulation Functions
 
 This package includes additional functions like the viterbi-encoding
 algorithm, so it does not have to be programmed on the side:
-
-``` r
-#Viterbi Here
-```
 
 # Stochastic Version
 
@@ -72,41 +76,6 @@ As data gets more complex, with more locations and possibly adding in
 more mixtures and states, it becomes necessary to create a less
 intensive method. This is the purpose of the stochastic version of the
 function.
-
-``` r
-library(HMMVI)
-library(Rmpfr)
-```
-
-    ## Warning: package 'Rmpfr' was built under R version 4.5.3
-
-    ## Loading required package: gmp
-
-    ## Warning: package 'gmp' was built under R version 4.5.3
-
-    ## 
-    ## Attaching package: 'gmp'
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     %*%, apply, crossprod, matrix, tcrossprod
-
-    ## C code of R package 'Rmpfr': GMP using 64 bits per limb
-
-    ## 
-    ## Attaching package: 'Rmpfr'
-
-    ## The following object is masked from 'package:gmp':
-    ## 
-    ##     outer
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     dbinom, dchisq, dgamma, dnbinom, dnorm, dpois, dt, pgamma, pnorm
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     cbind, pmax, pmin, rbind
 
 ``` r
 #Define some hyperparameter guesses
@@ -118,20 +87,14 @@ zeta_0      <- matrix(data = c(3,4,3,3,3.5,3.5,4,3,3),nrow = 3,ncol = 3,byrow = 
 zeta_0      <- array(zeta_0,dim = c(3,3,10))
 alpha_0     <- matrix(rep(10,9),nrow = 3,byrow = T)/3 # Dirichlet prior for transition matrix rows
 xi_0        <- c(.4,.3,.3) # Dirichlet prior for initial probabilities
+param <- list('gamma_shape' = gamma_0, 'gamma_rate' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
 
-StoModel <- StoVBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, xi = xi_0, alpha = alpha_0, zeta = zeta_0, gamma_shape = gamma_0, gamma_rate = delta_0, obs = Faux2, mix.samples = F)
+#StoModel <- fit.VBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, hypers = param, dist = "stochexp", data = raindata)
 ```
 
 ``` r
-print(StoModel$posteriors$pi)
+#print(StoModel$posteriors$pi)
+#print(StoModel$iternum)
 ```
-
-    ## [1] 0.6104147 0.1947920 0.1947933
-
-``` r
-print(StoModel$iternum)
-```
-
-    ## [1] 10
 
 # Gamma Mixtures

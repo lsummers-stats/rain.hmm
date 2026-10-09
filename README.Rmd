@@ -1,5 +1,5 @@
 ---
-title: "HMMVI: Hidden Markov Models with Variational Bayes"
+title: "rain.hmm: Hidden Markov Models with Variational Bayes"
 output: github_document
 ---
 
@@ -70,9 +70,13 @@ This package includes additional functions like the viterbi-encoding algorithm, 
 # Stochastic Version
 As data gets more complex, with more locations and possibly adding in more mixtures and states, it becomes necessary to create a less intensive method. This is the purpose of the stochastic version of the function.
 
-```{r stochastic}
+```{r codycody, include = F}
 library(rain.hmm)
 library(Rmpfr)
+```
+
+
+```{r stochastic}
 #Define some hyperparameter guesses
 gamma_0     <- matrix(data = c(.5,2,1.5,5,2,10),nrow = 3,ncol = 2,byrow = T) # shape of exponential rate
 gamma_0     <- array(gamma_0,dim = c(3,2,10))
@@ -84,12 +88,12 @@ alpha_0     <- matrix(rep(10,9),nrow = 3,byrow = T)/3 # Dirichlet prior for tran
 xi_0        <- c(.4,.3,.3) # Dirichlet prior for initial probabilities
 param <- list('gamma_shape' = gamma_0, 'gamma_rate' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
 
-StoModel <- fit.VBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, hypers = param, dist = "stochexp", data = raindata)
+#StoModel <- fit.VBEM(D = 92, S = 3, Y = 20, L = 10, M = 3, hypers = param, dist = "stochexp", data = raindata)
 ```
 
 ```{r result}
-print(StoModel$posteriors$pi)
-print(StoModel$iternum)
+#print(StoModel$posteriors$pi)
+#print(StoModel$iternum)
 ```
 
 
