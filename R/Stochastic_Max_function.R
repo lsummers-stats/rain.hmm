@@ -7,11 +7,20 @@ VBMS.exp = function(numStates, numLoc, numMix, numYears, numDays, xi, alpha, zet
   zeta_jl      <- zeta[[iter]] # posterior Dirichlet parameters for mixing probabilities
   alpha_j      <- alpha[[iter]] # posterior Dirichlet parameters for transition matrix rows
   xi_j         <- xi[[iter]] # posterior Dirichlet parameters for initial distribution
-  gamma_prior      <- gamma_shape[[iter - 1]]
-  delta_prior      <- gamma_rate[[iter - 1]]
-  xi_prior         <- xi[[iter - 1]]
-  alpha_prior      <- alpha[[iter - 1]]
-  zeta_prior      <- xi[[iter - 1]]
+  if(iter == 1){
+    gamma_prior      <- gamma_shape[[1]]
+    delta_prior      <- gamma_rate[[1]]
+    xi_prior         <- xi[[1]]
+    alpha_prior      <- alpha[[1]]
+    zeta_prior      <- xi[[1]]
+  }else{
+    gamma_prior      <- gamma_shape[[iter - 1]]
+    delta_prior      <- gamma_rate[[iter - 1]]
+    xi_prior         <- xi[[iter - 1]]
+    alpha_prior      <- alpha[[iter - 1]]
+    zeta_prior      <- xi[[iter - 1]]
+  }
+
   #### Update hyperparameters
   for(j in 1:numStates){
     xi_j[j] <- (1 - step)*xi_j[j] + (step)*(xi_prior[j] + sum(q_1j[j]))
