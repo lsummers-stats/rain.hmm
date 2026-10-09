@@ -77,19 +77,7 @@ VBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, obs
     lambda.post[,,l] <-lambda.post[,,l] + params$RainRate}
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
-  xi.track <- array(0, dim = c(iter, S))
-  alpha.track <- array(0, dim = c(S,S,iter))
-  mix.track <- array(0, dim = c(S,M,L,iter))
-  shape.track <- array(0, dim = c(S,M - 1,L, iter))
-  rate.track <- array(0, dim = c(S,M - 1,L, iter))
-  for(i in 1:iter){
-    xi.track[i,] <- xi.list[[i]]
-    alpha.track[,,i] <- alpha.list[[i]]
-    mix.track[,,,i] <- mix.list[[i]]
-    shape.track[,,,i] <- shape.list[[i]]
-    rate.track[,,,i] <- rate.list[[i]]
-  }
-  param.tracker = list('xi' = xi.track, 'alpha' = alpha.track, 'zeta' = mix.track, 'shape' = shape.track, 'rate' = rate.track)
+  param.tracker = list('xi' = xi.list, 'alpha' = alpha.list, 'zeta' = mix.list, 'shape' = shape.list, 'rate' = rate.list)
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)
   output = list('posteriors' = posteriors, 'ELBO' = elbo, 'DIC' = dic, 'iternum' = iter, 'param.tracker' = param.tracker)
 }

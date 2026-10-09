@@ -83,19 +83,7 @@ StoVBEM.exp = function(D, S, Y, L, M, xi, alpha, zeta, gamma_shape, gamma_rate, 
     params <- post_param(numStates = S,numMix = M,gamma.post = VBMout$gamma_jml[,,l],delta.post = VBMout$delta_jml[,,l], zeta = VBMout$zeta_jl[,,l], alpha = VBMout$alpha_j, xi = VBMout$xi_j)
     zeta.post[,,l]   <-zeta.post[,,l] + params$MixProb
     lambda.post[,,l] <-lambda.post[,,l] + params$RainRate}
-  xi.track <- array(0, dim = c(iter, S))
-  alpha.track <- array(0, dim = c(S,S,iter))
-  mix.track <- array(0, dim = c(S,M,L,iter))
-  shape.track <- array(0, dim = c(S,M - 1,L, iter))
-  rate.track <- array(0, dim = c(S,M - 1,L, iter))
-  for(i in 1:iter){
-    xi.track[i,] <- xi.list[[i]]
-    alpha.track[,,i] <- alpha.list[[i]]
-    mix.track[,,,i] <- mix.list[[i]]
-    shape.track[,,,i] <- shape.list[[i]]
-    rate.track[,,,i] <- rate.list[[i]]
-  }
-  param.tracker = list('xi' = xi.track, 'alpha' = alpha.track, 'zeta' = mix.track, 'shape' = shape.track, 'rate' = rate.track)
+  param.tracker = list('xi' = xi.list, 'alpha' = alpha.list, 'zeta' = mix.list, 'shape' = shape.list, 'rate' = rate.list)
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_shape' = gamma_shape, 'gamma_rate' = gamma_rate, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post)

@@ -102,22 +102,6 @@ VBEM.gam = function(D, S, Y, L, M = 2, xi, alpha, zeta, gammah, deltah, thetah, 
     omega.post[,,l] <- omega.post[,,l] + params$Rainfall_shape}
   pi.post     <- params$InitDist
   tmat.post   <- params$TransMat
-  xi.track <- array(0, dim = c(iter, S))
-  alpha.track <- array(0, dim = c(S,S,iter))
-  mix.track <- array(0, dim = c(S,M,L,iter))
-  gamma.track <- array(0, dim = c(S,M - 1,L, iter))
-  delta.track <- array(0, dim = c(S,M - 1,L, iter))
-  theta.track <- array(0, dim = c(S,M - 1,L, iter))
-  logbeta.track <- array(0, dim = c(S,M - 1,L, iter))
-  for(i in 1:iter){
-    xi.track[i,] <- xi.list[[i]]
-    alpha.track[,,i] <- alpha.list[[i]]
-    mix.track[,,,i] <- mix.list[[i]]
-    gamma.track[,,,i] <- gamma.list[[i]]
-    delta.track[,,,i] <- delta.list[[i]]
-    theta.track[,,,i] <- theta.list[[i]]
-    logbeta.track[,,,i] <- logbeta.list[[i]]
-  }
-  param.tracker = list('xi' = xi.track, 'alpha' = alpha.track, 'zeta' = mix.track, 'gamma' = gamma.track, 'delta' = delta.track, 'theta'= theta.track, 'logbeta'= logbeta.track)
+  param.tracker = list('xi' = xi.list, 'alpha' = alpha.list, 'zeta' = mix.list, 'gamma' = gamma.list, 'delta' = delta.list, 'theta'= theta.list, 'logbeta'= logbeta.list)
   posteriors <- list('pi' = pi.post, 'transmat' = tmat.post, 'gamma_hyper' = gammah, 'delta_hyper' = deltah, 'theta_hyper' = thetah, 'beta_hyper' = logbetah, 'mix' = zeta.post, 'constants' = VBMout$h_jml, 'lambda' = lambda.post, 'omega' = omega.post)
   output = list('posteriors' = posteriors, 'ELBO' = elbo, 'iternum' = iter, 'param.tracker' = param.tracker)}
