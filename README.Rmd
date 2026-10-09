@@ -9,15 +9,22 @@ This package is designed...
 
 The basic function uses Variational Bayes assuming exponential mixture components:
 
+
 ```{r example}
 library(rain.hmm)
 #Pulling the simplified Chesapeake Bay dataset included within the package as a tester.
 
 set.seed(1)
-raindata <- data(cbayrain)[-1]
-raindata <- raindata[1:10]
+data <- cbayrain[,-1]
+data <- data[,1:10]
 
-#the [-1] removes the dates column. Shrinking for ease of showcase.
+raindata <- array(NA, dim = c(1840, 1, 10))
+
+for(i in 1:10){
+  raindata[,,i] <- data[,i]
+}
+
+#the [-1] removes the dates column. Shrinking to 10 locations for ease of showcase.
 
 #The VBEM function requires you to start with some potential priors, as well as pre-pick the number of days, years, mixtures, and number of locations you collected data from.
 
@@ -25,7 +32,7 @@ raindata <- raindata[1:10]
 
 S = 3
 M = 3
-L = 3
+L = 10
 
 ##Initial estimates of the hyperparameters:
 gamma_0     <- matrix(data = c(.5,2,1.5,9,2,16),nrow = S,ncol = M-1,byrow = T) # shape of exponential rate
@@ -37,9 +44,9 @@ zeta_0      <- array(zeta_0,dim = c(S,M,L))
 alpha_0     <- matrix(rep(10,S^2),nrow = S,byrow = T)/S # Dirichlet prior for transition matrix rows
 xi_0        <- rep(1,S)/S # Dirichlet prior for initial probabilities
 
-param <- list('gamma' = gamma_0, 'delta' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
+param <- list('gamma_shape' = gamma_0, 'gamma_rate' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
 
-Model <- fit.VBEM(D = 1840, S = S, Y = 1, L = 3, M = 3, hypers = param, data = raindata)
+Model <- fit.VBEM(D = 1840, S = 3, Y = 1, L = 3, M = 3, hypers = param, dist = "exp", data = raindata)
 ```
 
 The output is a list, containing information such as the posterior hyperparameters, or the ELBO/DIC.
