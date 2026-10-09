@@ -11,7 +11,7 @@ fit.VBEM(
   M = 2,
   D,
   Y = 1,
-  dist = c("exp", "gamma", "stoch.exp"),
+  dist = c("exp", "gamma", "stochexp"),
   hypers,
   mix.samples = F,
   maxiter = 1000

@@ -9,14 +9,17 @@ The basic function uses Variational Bayes assuming exponential mixture
 components:
 
 ``` r
-library(HMMVI)
-#Pulling the Fake Data Set Faux 1
+library(rain.hmm)
+#Pulling the simplified Chesapeake Bay dataset included within the package as a tester.
+
 set.seed(1)
-y <- Faux1[[1]]
+raindata <- data(cbayrain)[-1]
+
+#the [-1] removes the dates column.
 
 #The VBEM function requires you to start with some potential priors, as well as pre-pick the number of days, years, mixtures, and number of locations you collected data from.
 
-##Assuming 3 states, 3 mixtures and 3 locations, with 1800 days of data collected and not split into years
+##Assuming 3 states, 3 mixtures and 3 locations, with 1840 days of data collected and not split into years
 
 S = 3
 M = 3
@@ -31,13 +34,13 @@ zeta_0      <- matrix(data = c(6,8,6,6,7,7,8,6,6),nrow = S,ncol = M,byrow = T)/(
 zeta_0      <- array(zeta_0,dim = c(S,M,L))
 alpha_0     <- matrix(rep(10,S^2),nrow = S,byrow = T)/S # Dirichlet prior for transition matrix rows
 xi_0        <- rep(1,S)/S # Dirichlet prior for initial probabilities
-h_j0        <- gamma_0*log(delta_0) - lgamma(gamma_0) # constant terms in prior (log)
 
-Model <- VBEM(D = 1800, S = S, Y = 1, L = 3, M = 3, xi = xi_0, alpha = alpha_0, zeta = zeta_0, gamma_shape = gamma_0, gamma_rate = delta_0, y)
+param <- list('gamma' = gamma_0, 'delta' = delta_0, 'zeta' = zeta_0, 'alpha' = alpha_0, 'xi' = xi_0)
+
+Model <- fit.VBEM(D = 1840, S = S, Y = 1, L = 3, M = 3, hypers = param, data = y)
 ```
 
-The output is a list, containing information such as the posterior
-hyperparameters, or the ELBO/DIC.
+The output is a list, containing information such as the posterior updates, the ELBO, and the number of iterations.
 
 ``` r
 print(Model$posteriors$pi)
